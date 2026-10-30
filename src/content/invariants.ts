@@ -33,13 +33,14 @@ export function lessonInvariants(lesson: Lesson): string[] {
         problems.push(`${where}: arkusz „${check.sheet}” nie istnieje w zadaniu`);
       }
 
-      const singleRef =
+      const cell =
         check.type === "cellValue" || check.type === "cellFormula"
-          ? parseCellRef(check.cell)
+          ? check.cell
           : null;
+      const singleRef = cell ? parseCellRef(cell) : null;
       if (singleRef) {
         if (singleRef.row >= rowCount || singleRef.col >= columnCount) {
-          problems.push(`${where}: komórka ${check.cell} poza arkuszem`);
+          problems.push(`${where}: komórka ${cell} poza arkuszem`);
         }
       }
 

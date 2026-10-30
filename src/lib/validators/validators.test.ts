@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import type { Check } from "@/content/schema";
 import { colToIndex, indexToCol, parseCellRef, parseRange } from "./cells";
 import { normalizeFormula } from "./normalize";
 import { runChecks } from "./run";
@@ -224,11 +225,11 @@ describe("runChecks", () => {
   });
 
   it("rangeValues: checks every cell in order", () => {
-    const check = {
+    const check: Check = {
       type: "rangeValues",
       range: "A2:A4",
       expected: ["Kawa", "Herbata", "Kakao"],
-    } as const;
+    };
     expect(
       runChecks([check], snapshot({ A2: { value: "Kawa" }, A3: { value: "Herbata" }, A4: { value: "Kakao" } })).passed,
     ).toBe(true);
@@ -258,7 +259,7 @@ describe("runChecks", () => {
   });
 
   it("rangeFilled: counts non-empty cells", () => {
-    const check = { type: "rangeFilled", range: "C2:C6", expectedCount: 5 } as const;
+    const check: Check = { type: "rangeFilled", range: "C2:C6", expectedCount: 5 };
     const full = Object.fromEntries(
       ["C2", "C3", "C4", "C5", "C6"].map((ref) => [ref, { value: 1 }]),
     );
