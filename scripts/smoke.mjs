@@ -1,17 +1,19 @@
 /**
  * Browser smoke test for the lesson runner (Phase 3+ verification):
  * registers a throwaway account (lessons sit behind a session), opens
- * /lekcje/demo in real Chromium, waits for the Univer spreadsheet canvas,
- * types into cell A1, clicks "Sprawdź" and asserts the success banner.
+ * /lekcje/podstawy-nawigacji in real Chromium, waits for the Univer
+ * spreadsheet canvas, fills task 1 (headers in A1 and B1), clicks
+ * "Sprawdź" and asserts the success banner plus the progress round-trip.
  * Run: node scripts/smoke.mjs [baseUrl] (default localhost:3000).
  *
  * The Univer grid renders on a canvas, so cell A1 is clicked by offset:
  * row header ~46px wide, column header ~24px tall (Univer defaults).
+ * B1 is reached with arrow keys instead of a second offset click.
  */
 import { chromium } from "playwright";
 
 const BASE = process.argv[2] ?? "http://localhost:3000";
-const url = `${BASE}/lekcje/demo`;
+const url = `${BASE}/lekcje/podstawy-nawigacji`;
 
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
@@ -84,7 +86,13 @@ try {
   const target = { x: canvas.x + 46 + 40, y: canvas.y + 20 + 10 };
   console.log(`  grid canvas ${Math.round(canvas.w)}x${Math.round(canvas.h)}, clicking A1 at ${Math.round(target.x)},${Math.round(target.y)}`);
   await page.mouse.click(target.x, target.y);
-  await page.keyboard.type("Excel");
+  await page.keyboard.type("Produkt");
+  await page.keyboard.press("Enter");
+  // Enter moved the selection down to A2; walk to B1 with arrow keys —
+  // no second offset click, so column width can't betray us.
+  await page.keyboard.press("ArrowUp");
+  await page.keyboard.press("ArrowRight");
+  await page.keyboard.type("Cena");
   await page.keyboard.press("Enter");
 
   await checkButton.click();
@@ -100,13 +108,10 @@ try {
   if (outcome === "pass") {
     console.log("✓ Check passed: success banner shown");
 
-    // Progress round-trip: the catalog card must show the lesson as done.
+    // Progress round-trip: the catalog card shows task 1 of 4 completed.
     await page.goto(`${BASE}/lekcje`, { waitUntil: "domcontentloaded" });
-    await page
-      .getByText("Ukończona")
-      .first()
-      .waitFor({ timeout: 10_000 });
-    console.log("✓ Progress persisted: catalog shows „Ukończona”");
+    await page.getByText("1/4").first().waitFor({ timeout: 10_000 });
+    console.log("✓ Progress persisted: catalog shows „1/4”");
 
     // Profile aggregates the same data.
     await page.goto(`${BASE}/profil`, { waitUntil: "domcontentloaded" });
@@ -131,8 +136,8 @@ try {
     errors.push(`no outcome rendered. Footer: ${footerText.replace(/\n/g, " | ")}`);
   }
 
-  await page.screenshot({ path: "scripts/smoke-demo.png", fullPage: false });
-  console.log("✓ Screenshot: scripts/smoke-demo.png");
+  await page.screenshot({ path: "scripts/smoke-podstawy.png", fullPage: false });
+  console.log("✓ Screenshot: scripts/smoke-podstawy.png");
 
   if (errors.length > 0) {
     console.log(`! Browser errors observed (${errors.length}):`);
