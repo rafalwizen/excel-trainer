@@ -1,8 +1,9 @@
 /**
  * Browser smoke test for the lesson runner (Phase 3+ verification):
- * opens /lekcje/demo in real Chromium, waits for the Univer spreadsheet
- * canvas, types into cell A1, clicks "Sprawdź" and asserts the success
- * banner. Run: node scripts/smoke.mjs [baseUrl] (default localhost:3000).
+ * registers a throwaway account (lessons sit behind a session), opens
+ * /lekcje/demo in real Chromium, waits for the Univer spreadsheet canvas,
+ * types into cell A1, clicks "Sprawdź" and asserts the success banner.
+ * Run: node scripts/smoke.mjs [baseUrl] (default localhost:3000).
  *
  * The Univer grid renders on a canvas, so cell A1 is clicked by offset:
  * row header ~46px wide, column header ~24px tall (Univer defaults).
@@ -26,11 +27,34 @@ page.on("console", (msg) => {
 });
 
 try {
-  await page.goto(url, { waitUntil: "domcontentloaded" });
+  // Sign up a unique throwaway user; page.request shares the browser
+  // context cookie jar, so the session cookie carries to page.goto.
+  const email = `smoke-${Date.now()}@example.com`;
+  const signup = await page.request.post(`${BASE}/api/auth/sign-up/email`, {
+    data: { name: "Smoke Test", email, password: "Sm0ke-Test-123" },
+  });
+  if (!signup.ok()) {
+    throw new Error(`sign-up failed: HTTP ${signup.status()} — ${(await signup.text()).slice(0, 200)}`);
+  }
+  console.log(`✓ Signed up ${email}`);
 
-  // Wait for the Univer canvas to appear (editor fully client-side).
-  await page.locator("canvas").first().waitFor({ state: "visible", timeout: 30_000 });
-  console.log("✓ Univer canvas visible");
+  await page.goto(url, { waitUntil: "domcontentloaded" });
+  if (page.url().includes("/logowanie")) {
+    throw new Error("redirected to /logowanie — session cookie missing");
+  }
+
+  // Wait for the Univer grid canvas to appear (editor fully client-side).
+  // The big grid canvas mounts LATER than the small header strips — wait
+  // for a canvas that is actually grid-sized before measuring.
+  await page.waitForFunction(
+    () =>
+      [...document.querySelectorAll("canvas")].some((c) => {
+        const r = c.getBoundingClientRect();
+        return r.width > 200 && r.height > 100;
+      }),
+    { timeout: 30_000 },
+  );
+  console.log("✓ Univer grid canvas visible");
 
   // The main grid canvas is the largest one; Univer also renders small
   // header strips as separate canvases.
@@ -75,6 +99,24 @@ try {
 
   if (outcome === "pass") {
     console.log("✓ Check passed: success banner shown");
+
+    // Progress round-trip: the catalog card must show the lesson as done.
+    await page.goto(`${BASE}/lekcje`, { waitUntil: "domcontentloaded" });
+    await page
+      .getByText("Ukończona")
+      .first()
+      .waitFor({ timeout: 10_000 });
+    console.log("✓ Progress persisted: catalog shows „Ukończona”");
+
+    // Profile aggregates the same data.
+    await page.goto(`${BASE}/profil`, { waitUntil: "domcontentloaded" });
+    await page.getByText("Łączna liczba prób").waitFor({ timeout: 10_000 });
+    const lessonRows = await page.getByRole("listitem").count();
+    if (lessonRows === 0) {
+      errors.push("profil: no lesson progress rows rendered");
+    } else {
+      console.log(`✓ Profile stats rendered (${lessonRows} lesson row(s))`);
+    }
   } else if (outcome === "fail") {
     const failures = await page
       .getByRole("alert")
@@ -95,8 +137,10 @@ try {
   if (errors.length > 0) {
     console.log(`! Browser errors observed (${errors.length}):`);
     for (const e of errors.slice(0, 5)) console.log("  " + e.slice(0, 300));
+    process.exitCode = 1;
   }
-  console.log("\nSMOKE TEST PASSED");
+
+  if (process.exitCode !== 1) console.log("\nSMOKE TEST PASSED");
 } catch (err) {
   await page.screenshot({ path: "scripts/smoke-fail.png" }).catch(() => {});
   console.error("SMOKE TEST FAILED:", err.message?.slice(0, 500));
