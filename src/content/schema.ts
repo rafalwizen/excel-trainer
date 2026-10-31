@@ -11,6 +11,9 @@ const cellRef = z.string().regex(/^[A-Za-z]+[1-9][0-9]*$/, "Nieprawidłowy adres
 const cellDatum = z.object({
   v: z.union([z.string(), z.number()]).optional(),
   t: z.number().optional(), // Univer cell value type, optional escape hatch
+  // Pre-filled formula ("=SUM(A1)"), passed through to Univer's ICellData.f —
+  // used when a task builds on a formula authored in an earlier task.
+  f: z.string().optional(),
 });
 
 /** Initial workbook state for a task (single sheet, converted to Univer data at runtime). */
