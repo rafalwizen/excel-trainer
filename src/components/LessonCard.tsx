@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Lesson } from "@/content/schema";
+import { plPlural } from "@/lib/plural";
 import { ProgressBar } from "./ProgressBar";
 
 export function LessonCard({
@@ -41,7 +42,9 @@ export function LessonCard({
                 {"★".repeat(3 - lesson.difficulty)}
               </span>
             </span>
-            <span>{total} zadań</span>
+            <span>
+              {total} {plPlural(total, "zadanie", "zadania", "zadań")}
+            </span>
           </span>
           <span className="font-medium text-neutral-600">
             {completedCount}/{total}

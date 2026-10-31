@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { LessonCard } from "@/components/LessonCard";
 import { allLessons, categories } from "@/content/registry";
 import { getLessonProgress } from "@/features/progress/queries";
+import { plPlural } from "@/lib/plural";
 import { getCurrentUser } from "@/lib/session";
 
 export const metadata: Metadata = {
@@ -29,7 +30,9 @@ async function Catalog() {
         <div className="mx-auto flex w-full max-w-4xl items-center gap-3 px-4 py-4 sm:px-6">
           <h1 className="text-lg font-semibold text-neutral-900">Lekcje</h1>
           <span className="text-sm text-neutral-400">
-            {allLessons.length} tematów do treningu
+            {allLessons.length}{" "}
+            {plPlural(allLessons.length, "temat", "tematy", "tematów")} do
+            treningu
           </span>
           <Link
             href="/profil"

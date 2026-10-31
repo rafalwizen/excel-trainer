@@ -12,13 +12,30 @@ const geistMono = Geist_Mono({
   subsets: ["latin", "latin-ext"],
 });
 
+const title = "Excel Trainer — nauka Excela przez zadania";
+const description =
+  "Trenuj Excela na praktycznych zadaniach w arkuszu, który wygląda i działa jak prawdziwy. Śledź postęp, wybieraj tematy.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.BASE_URL ?? "http://localhost:3000"),
   title: {
-    default: "Excel Trainer — nauka Excela przez zadania",
+    default: title,
     template: "%s",
   },
-  description:
-    "Trenuj Excela na praktycznych zadaniach w arkuszu, który wygląda i działa jak prawdziwy. Śledź postęp, wybieraj tematy.",
+  description,
+  openGraph: {
+    type: "website",
+    locale: "pl_PL",
+    url: "/",
+    siteName: "Excel Trainer",
+    title,
+    description,
+  },
+  twitter: {
+    card: "summary",
+    title,
+    description,
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
