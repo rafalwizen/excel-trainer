@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { Lesson } from "@/content/schema";
+import { recordTaskResult } from "@/features/progress/actions";
 import { runChecks } from "@/lib/validators/run";
 import type { CheckResults } from "@/lib/validators/types";
 import type { GetSnapshot } from "./UniverEditor";
@@ -29,13 +30,10 @@ function firstIncomplete(lesson: Lesson, completed: Set<number>): number {
 export function LessonRunner({
   lesson,
   initialCompleted,
-  onTaskResult,
 }: {
   lesson: Lesson;
   /** Indexes of tasks already completed by this user (restored from DB). */
   initialCompleted: number[];
-  /** Progress hook wired to the server action in the progress feature. */
-  onTaskResult?: (taskIndex: number, passed: boolean) => void;
 }) {
   const [completed, setCompleted] = useState<Set<number>>(
     () => new Set(initialCompleted),
@@ -74,7 +72,10 @@ export function LessonRunner({
       if (checkResults.passed) {
         setCompleted((prev) => new Set(prev).add(taskIndex));
       }
-      onTaskResult?.(taskIndex, checkResults.passed);
+      // Persist the attempt in the background — the UI never waits on it.
+      recordTaskResult(lesson.slug, taskIndex, checkResults.passed).catch(
+        (error) => console.error("Failed to record task result", error),
+      );
     } finally {
       setChecking(false);
     }

@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { allLessons, getLesson } from "@/content/registry";
 import { LessonRunner } from "@/features/lessons/LessonRunner";
+import { getCompletedTaskIndexes } from "@/features/progress/queries";
+import { getCurrentUser } from "@/lib/session";
 
 export function generateStaticParams() {
   return allLessons.map((lesson) => ({ slug: lesson.slug }));
@@ -48,5 +50,9 @@ async function LessonContent({
   const lesson = getLesson(slug);
   if (!lesson) notFound();
 
-  return <LessonRunner lesson={lesson} initialCompleted={[]} />;
+  // Progress restore requires a session; anonymous users are sent to /logowanie.
+  const user = await getCurrentUser();
+  const initialCompleted = await getCompletedTaskIndexes(user.id, slug);
+
+  return <LessonRunner lesson={lesson} initialCompleted={initialCompleted} />;
 }
