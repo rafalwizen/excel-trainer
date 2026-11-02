@@ -1,0 +1,5 @@
+# Site address comes from BASE_URL (e.g. https://example.com). For a public
+# domain Caddy obtains and renews a Let's Encrypt certificate automatically.
+{$BASE_URL}
+
+reverse_proxy app:3000
