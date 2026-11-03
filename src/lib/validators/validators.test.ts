@@ -3,7 +3,8 @@ import type { Check } from "@/content/schema";
 import { colToIndex, indexToCol, parseCellRef, parseRange } from "./cells";
 import { normalizeFormula } from "./normalize";
 import { runChecks } from "./run";
-import type { ValidationSnapshot } from "./types";
+import { normalizeColor, normalizePattern } from "./styles";
+import type { SnapshotStyle, ValidationSnapshot } from "./types";
 
 // --- cells helpers ---
 
@@ -68,7 +69,10 @@ describe("normalizeFormula", () => {
 // --- check engine ---
 
 function snapshot(
-  cells: Record<string, { value?: unknown; formula?: string | null }>,
+  cells: Record<
+    string,
+    { value?: unknown; formula?: string | null; style?: SnapshotStyle | null }
+  >,
   sheet = "Arkusz1",
 ): ValidationSnapshot {
   return {
@@ -80,6 +84,7 @@ function snapshot(
             {
               value: (c.value ?? null) as never,
               formula: c.formula ?? null,
+              style: c.style ?? null,
             },
           ]),
         ),
@@ -302,5 +307,275 @@ describe("runChecks", () => {
     expect(r.results).toHaveLength(2);
     expect(r.results[0].ok).toBe(false);
     expect(r.results[1].ok).toBe(true);
+  });
+});
+
+// --- style normalization (raw Univer values vs authored expectations) ---
+
+describe("style normalization", () => {
+  it("treats white, empty and none fills as no fill", () => {
+    // Univer's getBackgrounds() returns "#fff" for unfilled cells.
+    expect(normalizeColor("#fff")).toBeNull();
+    expect(normalizeColor("#FFF")).toBeNull();
+    expect(normalizeColor("#ffffff")).toBeNull();
+    expect(normalizeColor("rgb(255, 255, 255)")).toBeNull();
+    expect(normalizeColor("white")).toBeNull();
+    expect(normalizeColor("")).toBeNull();
+    expect(normalizeColor("none")).toBeNull();
+    expect(normalizeColor(null)).toBeNull();
+    expect(normalizeColor(undefined)).toBeNull();
+  });
+
+  it("normalizes real fills to comparison keys", () => {
+    expect(normalizeColor("rgb(255, 230, 153)")).toBe("rgb(255,230,153)");
+    expect(normalizeColor("  #FFE699 ")).toBe("#ffe699");
+  });
+
+  it("treats empty and General as no pattern", () => {
+    // Univer's getNumberFormats() returns "" for the default format.
+    expect(normalizePattern("")).toBeNull();
+    expect(normalizePattern("General")).toBeNull();
+    expect(normalizePattern("general")).toBeNull();
+    expect(normalizePattern(null)).toBeNull();
+  });
+
+  it("normalizes patterns to comparison keys", () => {
+    expect(normalizePattern('#,##0.00 "zł"')).toBe('#,##0.00"zł"');
+    expect(normalizePattern("0 %")).toBe("0%");
+    expect(normalizePattern("0.00 ZŁ")).toBe("0.00zł");
+  });
+});
+
+// --- cellStyle check ---
+
+const styled = (overrides: Partial<SnapshotStyle>): SnapshotStyle => ({
+  bold: false,
+  italic: false,
+  background: null,
+  numberFormat: null,
+  ...overrides,
+});
+
+describe("cellStyle check", () => {
+  it("passes when bold is set as expected", () => {
+    const r = runChecks(
+      [{ type: "cellStyle", cell: "A1", bold: true }],
+      snapshot({ A1: { value: "Nagłówek", style: styled({ bold: true }) } }),
+    );
+    expect(r.passed).toBe(true);
+  });
+
+  it("fails with a Polish message when bold is missing", () => {
+    const r = runChecks(
+      [{ type: "cellStyle", cell: "A1", bold: true }],
+      snapshot({ A1: { value: "Nagłówek", style: styled({}) } }),
+    );
+    expect(r.passed).toBe(false);
+    expect(r.results[0]).toMatchObject({
+      message: "Komórka A1 powinna mieć pogrubioną czcionkę.",
+    });
+  });
+
+  it("a cell without style counts as unformatted", () => {
+    const r = runChecks(
+      [{ type: "cellStyle", cell: "B2", italic: true }],
+      snapshot({ B2: { value: 5 } }),
+    );
+    expect(r.passed).toBe(false);
+    expect(r.results[0]).toMatchObject({
+      message: "Komórka B2 powinna mieć kursywę.",
+    });
+  });
+
+  it("backgroundSet requires any fill color", () => {
+    const check = { type: "cellStyle", cell: "A1", backgroundSet: true } as const;
+    expect(
+      runChecks(
+        [check],
+        snapshot({ A1: { value: 1, style: styled({ background: "#ffe699" }) } }),
+      ).passed,
+    ).toBe(true);
+    expect(
+      runChecks([check], snapshot({ A1: { value: 1, style: styled({}) } }))
+        .passed,
+    ).toBe(false);
+  });
+
+  it("numberFormatOneOf compares normalized patterns", () => {
+    const check: Check = {
+      type: "cellStyle",
+      cell: "B2",
+      numberFormatOneOf: ["#,##0.00 ZŁ", '#,##0.00 "zł"'],
+    };
+    expect(
+      runChecks(
+        [check],
+        snapshot({
+          B2: { value: 12.5, style: styled({ numberFormat: "#,##0.00 zł" }) },
+        }),
+      ).passed,
+    ).toBe(true);
+    expect(
+      runChecks(
+        [check],
+        snapshot({ B2: { value: 12.5, style: styled({ numberFormat: "0%" }) } }),
+      ).passed,
+    ).toBe(false);
+  });
+
+  it("numberFormatSet fails for the default (General) format", () => {
+    expect(
+      runChecks(
+        [{ type: "cellStyle", cell: "B2", numberFormatSet: true }],
+        snapshot({ B2: { value: 1, style: styled({ numberFormat: null }) } }),
+      ).passed,
+    ).toBe(false);
+    expect(
+      runChecks(
+        [{ type: "cellStyle", cell: "B2", numberFormatSet: false }],
+        snapshot({ B2: { value: 1, style: styled({ numberFormat: null }) } }),
+      ).passed,
+    ).toBe(true);
+  });
+
+  it("checks only the asserted fields", () => {
+    const r = runChecks(
+      [{ type: "cellStyle", cell: "A1", bold: true }],
+      snapshot({
+        A1: { value: "X", style: styled({ bold: true, italic: true }) },
+      }),
+    );
+    expect(r.passed).toBe(true);
+  });
+});
+
+// --- rangeValuesUnordered check ---
+
+describe("rangeValuesUnordered check", () => {
+  it("passes regardless of order", () => {
+    const check: Check = {
+      type: "rangeValuesUnordered",
+      range: "A1:A3",
+      expected: ["Kawa", "Herbata", "Kakao"],
+    };
+    expect(
+      runChecks(
+        [check],
+        snapshot({
+          A1: { value: "Kakao" },
+          A2: { value: "Kawa" },
+          A3: { value: "Herbata" },
+        }),
+      ).passed,
+    ).toBe(true);
+  });
+
+  it("fails when a value is missing", () => {
+    const check: Check = {
+      type: "rangeValuesUnordered",
+      range: "A1:A3",
+      expected: ["Kawa", "Herbata", "Kakao"],
+    };
+    const r = runChecks(
+      [check],
+      snapshot({
+        A1: { value: "Kawa" },
+        A2: { value: "Herbata" },
+        A3: { value: "Sok" },
+      }),
+    );
+    expect(r.passed).toBe(false);
+    expect(r.results[0]).toMatchObject({
+      message: expect.stringContaining("brakuje wartości „Kakao”"),
+    });
+  });
+
+  it("counts duplicates — wrong repeat count fails", () => {
+    const check: Check = {
+      type: "rangeValuesUnordered",
+      range: "A1:A2",
+      expected: [5, 7],
+    };
+    expect(
+      runChecks(
+        [check],
+        snapshot({ A1: { value: 5 }, A2: { value: 5 } }),
+      ).passed,
+    ).toBe(false);
+  });
+
+  it("numeric comparison honors tolerance", () => {
+    const check: Check = {
+      type: "rangeValuesUnordered",
+      range: "A1:A2",
+      expected: [1.1, 2.2],
+      tolerance: 0.01,
+    };
+    expect(
+      runChecks(
+        [check],
+        snapshot({ A1: { value: 2.205 }, A2: { value: 1.102 } }),
+      ).passed,
+    ).toBe(true);
+  });
+
+  it("null expects an empty cell somewhere in the range", () => {
+    const check: Check = {
+      type: "rangeValuesUnordered",
+      range: "A1:A2",
+      expected: [1, null],
+    };
+    expect(
+      runChecks([check], snapshot({ A2: { value: 1 } })).passed,
+    ).toBe(true);
+    expect(
+      runChecks(
+        [check],
+        snapshot({ A1: { value: 1 }, A2: { value: 2 } }),
+      ).passed,
+    ).toBe(false);
+  });
+
+  it("error values fail with a formula hint", () => {
+    const check: Check = {
+      type: "rangeValuesUnordered",
+      range: "A1:A2",
+      expected: [1, 2],
+    };
+    const r = runChecks(
+      [check],
+      snapshot({ A1: { value: "#DIV/0!" }, A2: { value: 2 } }),
+    );
+    expect(r.passed).toBe(false);
+    expect(r.results[0]).toMatchObject({
+      message: expect.stringContaining("#DIV/0!"),
+    });
+  });
+});
+
+// --- sheetExists check ---
+
+describe("sheetExists check", () => {
+  it("passes when the sheet exists", () => {
+    const snap: ValidationSnapshot = {
+      sheets: {
+        Arkusz1: { cells: {} },
+        Raport: { cells: { A1: { value: 1, formula: null } } },
+      },
+    };
+    expect(
+      runChecks([{ type: "sheetExists", name: "Raport" }], snap).passed,
+    ).toBe(true);
+  });
+
+  it("fails with an actionable message when missing", () => {
+    const r = runChecks(
+      [{ type: "sheetExists", name: "Raport" }],
+      snapshot({}),
+    );
+    expect(r.passed).toBe(false);
+    expect(r.results[0]).toMatchObject({
+      message: expect.stringContaining("dodaj go przyciskiem"),
+    });
   });
 });

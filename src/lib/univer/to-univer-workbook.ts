@@ -15,28 +15,33 @@ export interface UniverWorkbookLike {
       name: string;
       rowCount: number;
       columnCount: number;
-      // row index -> column index -> { v, t } — same matrix shape as WorkbookInit
-      cellData: WorkbookInit["cellData"];
+      // row index -> column index -> { v, t } — same matrix shape as SheetInit
+      cellData: WorkbookInit["sheets"][number]["cellData"];
     };
   };
 }
 
-const SHEET_ID = "sheet-1";
-
-/** Converts a lesson task's initial workbook into Univer workbook data. */
+/**
+ * Converts a lesson task's initial workbook into Univer workbook data.
+ * The first sheet is first in sheetOrder, which is the sheet Univer opens on.
+ */
 export function toUniverWorkbook(init: WorkbookInit): UniverWorkbookLike {
+  const sheets: UniverWorkbookLike["sheets"] = {};
+  const sheetOrder = init.sheets.map((sheet, index) => {
+    const id = `sheet-${index + 1}`;
+    sheets[id] = {
+      id,
+      name: sheet.name,
+      rowCount: sheet.rowCount,
+      columnCount: sheet.columnCount,
+      cellData: sheet.cellData,
+    };
+    return id;
+  });
   return {
     id: "workbook-1",
-    sheetOrder: [SHEET_ID],
+    sheetOrder,
     styles: {},
-    sheets: {
-      [SHEET_ID]: {
-        id: SHEET_ID,
-        name: init.sheetName,
-        rowCount: init.rowCount,
-        columnCount: init.columnCount,
-        cellData: init.cellData,
-      },
-    },
+    sheets,
   };
 }

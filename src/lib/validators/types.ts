@@ -4,11 +4,22 @@
  * validators are pure functions over plain JSON, so they unit-test
  * without a browser.
  */
+export interface SnapshotStyle {
+  bold: boolean;
+  italic: boolean;
+  /** Normalized fill color (lowercase), or null when the cell has no fill. */
+  background: string | null;
+  /** Normalized number-format pattern, or null when default ("General"). */
+  numberFormat: string | null;
+}
+
 export interface SnapshotCell {
   /** Computed value; null when the cell is empty. Error values are strings starting with "#". */
   value: string | number | boolean | null;
   /** Raw formula including "=", or null for typed values. */
   formula: string | null;
+  /** Cell formatting; absent when the extractor could not read styles. */
+  style?: SnapshotStyle | null;
 }
 
 export interface SnapshotSheet {
@@ -17,7 +28,7 @@ export interface SnapshotSheet {
 }
 
 export interface ValidationSnapshot {
-  /** Keys are sheet names. First key is the active/only sheet. */
+  /** Keys are sheet names. First key is the active sheet. */
   sheets: Record<string, SnapshotSheet>;
 }
 

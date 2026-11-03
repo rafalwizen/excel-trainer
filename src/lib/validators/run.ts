@@ -1,11 +1,13 @@
 import type { Check } from "@/content/schema";
 import { parseCellRef, parseRange } from "./cells";
 import { normalizeFormula } from "./normalize";
+import { normalizePattern } from "./styles";
 import {
   isErrorValue,
   type CheckOutcome,
   type CheckResults,
   type SnapshotCell,
+  type SnapshotStyle,
   type ValidationSnapshot,
 } from "./types";
 
@@ -21,6 +23,11 @@ function fmt(value: string | number | boolean | null): string {
 
 function emptyCell(): SnapshotCell {
   return { value: null, formula: null };
+}
+
+/** Formatting of a cell nobody touched — everything off/default. */
+function defaultStyle(): SnapshotStyle {
+  return { bold: false, italic: false, background: null, numberFormat: null };
 }
 
 function getSheet(
@@ -160,6 +167,114 @@ function checkRangeFilled(
   return { ok: true };
 }
 
+function checkCellStyle(
+  snapshot: ValidationSnapshot,
+  check: Extract<Check, { type: "cellStyle" }>,
+): CheckOutcome {
+  const cell = getCell(snapshot, check.sheet, check.cell);
+  const style = cell.style ?? defaultStyle();
+
+  if (check.bold !== undefined && style.bold !== check.bold) {
+    return {
+      ok: false,
+      message: check.bold
+        ? `Komórka ${check.cell} powinna mieć pogrubioną czcionkę.`
+        : `Komórka ${check.cell} nie powinna mieć pogrubionej czcionki.`,
+    };
+  }
+  if (check.italic !== undefined && style.italic !== check.italic) {
+    return {
+      ok: false,
+      message: check.italic
+        ? `Komórka ${check.cell} powinna mieć kursywę.`
+        : `Komórka ${check.cell} nie powinna mieć kursywy.`,
+    };
+  }
+  const hasBackground = style.background !== null;
+  if (check.backgroundSet !== undefined && hasBackground !== check.backgroundSet) {
+    return {
+      ok: false,
+      message: check.backgroundSet
+        ? `Komórka ${check.cell} powinna mieć kolor wypełnienia.`
+        : `Komórka ${check.cell} nie powinna mieć koloru wypełnienia.`,
+    };
+  }
+  const hasNumberFormat = style.numberFormat !== null;
+  if (
+    check.numberFormatSet !== undefined &&
+    hasNumberFormat !== check.numberFormatSet
+  ) {
+    return {
+      ok: false,
+      message: check.numberFormatSet
+        ? `Komórka ${check.cell} powinna mieć ustawiony format liczbowy (np. waluta).`
+        : `Komórka ${check.cell} nie powinna mieć ustawionego formatu liczbowego.`,
+    };
+  }
+  if (check.numberFormatOneOf) {
+    const pattern = style.numberFormat;
+    const matches =
+      pattern !== null &&
+      check.numberFormatOneOf.some(
+        // Normalize both sides: snapshots from the extractor are already
+        // normalized, but unit-test snapshots (and future producers) may not be.
+        (candidate) => normalizePattern(candidate) === normalizePattern(pattern),
+      );
+    if (!matches) {
+      return {
+        ok: false,
+        message: `Komórka ${check.cell} powinna mieć jeden z formatów liczbowych: ${check.numberFormatOneOf.join(" , ")}.`,
+      };
+    }
+  }
+  return { ok: true };
+}
+
+function checkRangeValuesUnordered(
+  snapshot: ValidationSnapshot,
+  check: Extract<Check, { type: "rangeValuesUnordered" }>,
+): CheckOutcome {
+  const refs = parseRange(check.range) ?? [];
+  for (const ref of refs) {
+    const cell = getCell(snapshot, check.sheet, ref);
+    if (isErrorValue(cell.value)) {
+      return {
+        ok: false,
+        message: `Komórka ${ref} zawiera błąd (${cell.value}) — sprawdź formułę.`,
+      };
+    }
+  }
+  // Multiset matching: every expected value must be matched by an unused cell,
+  // so both missing values and wrong duplicate counts fail.
+  const remaining = refs.map((ref) => getCell(snapshot, check.sheet, ref).value);
+  for (const expected of check.expected) {
+    const index = remaining.findIndex((value) =>
+      expected === null ? value === null : valuesEqual(value, expected, check.tolerance),
+    );
+    if (index === -1) {
+      return {
+        ok: false,
+        message: `W zakresie ${check.range} brakuje wartości ${fmt(expected)} — albo występuje zbyt mało razy.`,
+      };
+    }
+    remaining.splice(index, 1);
+  }
+  return { ok: true };
+}
+
+function checkSheetExists(
+  snapshot: ValidationSnapshot,
+  check: Extract<Check, { type: "sheetExists" }>,
+): CheckOutcome {
+  if (!snapshot.sheets[check.name]) {
+    return {
+      ok: false,
+      message: `Arkusz „${check.name}” nie istnieje — dodaj go przyciskiem + przy pasku arkuszy na dole.`,
+    };
+  }
+  return { ok: true };
+}
+
 /** Runs all checks against a snapshot. Pure function, safe to unit-test. */
 export function runChecks(
   checks: Check[],
@@ -175,6 +290,12 @@ export function runChecks(
         return checkRangeValues(snapshot, check);
       case "rangeFilled":
         return checkRangeFilled(snapshot, check);
+      case "cellStyle":
+        return checkCellStyle(snapshot, check);
+      case "rangeValuesUnordered":
+        return checkRangeValuesUnordered(snapshot, check);
+      case "sheetExists":
+        return checkSheetExists(snapshot, check);
     }
   });
   return { passed: results.every((r) => r.ok), results };
