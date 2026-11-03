@@ -3,6 +3,8 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { difficultyLabel } from "@/content/difficulty";
+import type { PrerequisiteRef } from "@/content/registry";
 import type { Lesson } from "@/content/schema";
 import { recordTaskResult } from "@/features/progress/actions";
 import { runChecks } from "@/lib/validators/run";
@@ -10,6 +12,7 @@ import type { CheckResults } from "@/lib/validators/types";
 import type { GetSnapshot } from "./UniverEditor";
 import { CheckResultsPanel } from "./CheckResults";
 import { Instructions } from "./Instructions";
+import { LessonIntro } from "./LessonIntro";
 import { TaskSidebar } from "./TaskSidebar";
 
 // Univer is client-only and heavy — never render it on the server.
@@ -29,9 +32,12 @@ function firstIncomplete(lesson: Lesson, completed: Set<number>): number {
 
 export function LessonRunner({
   lesson,
+  prerequisites,
   initialCompleted,
 }: {
   lesson: Lesson;
+  /** Prerequisite titles, resolved server-side for the intro panel links. */
+  prerequisites: PrerequisiteRef[];
   /** Indexes of tasks already completed by this user (restored from DB). */
   initialCompleted: number[];
 }) {
@@ -103,11 +109,17 @@ export function LessonRunner({
             <span className="rounded-full bg-neutral-100 px-2.5 py-1 font-medium text-neutral-600">
               {lesson.category}
             </span>
-            <span className="text-amber-500" title={`Poziom ${lesson.difficulty}`}>
+            <span
+              className="text-amber-500"
+              title={`Poziom ${difficultyLabel(lesson.difficulty)}`}
+            >
               {"★".repeat(lesson.difficulty)}
               <span className="text-neutral-300">
                 {"★".repeat(3 - lesson.difficulty)}
               </span>
+            </span>
+            <span className="font-medium text-neutral-500">
+              {difficultyLabel(lesson.difficulty)}
             </span>
             <span className="rounded-full bg-green-700/10 px-2.5 py-1 font-semibold text-green-800">
               {progressLabel}
@@ -118,6 +130,8 @@ export function LessonRunner({
 
       <div className="flex flex-1 flex-col lg:flex-row">
         <aside className="w-full shrink-0 space-y-5 border-b border-neutral-200 bg-white p-5 lg:w-[380px] lg:border-r lg:border-b-0 lg:overflow-y-auto">
+          <LessonIntro lesson={lesson} prerequisites={prerequisites} />
+
           <section>
             <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-400">
               Zadania

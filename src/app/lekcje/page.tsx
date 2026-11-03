@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
-import { LessonCard } from "@/components/LessonCard";
-import { allLessons, categories } from "@/content/registry";
+import { LessonBrowser } from "@/components/lessons/LessonBrowser";
+import { allLessons, lessonSummaries } from "@/content/registry";
 import { getLessonProgress } from "@/features/progress/queries";
 import { plPlural } from "@/lib/plural";
 import { getCurrentUser } from "@/lib/session";
@@ -22,7 +22,11 @@ export default function LessonsPage() {
 
 async function Catalog() {
   const user = await getCurrentUser(); // redirects to /logowanie when anonymous
-  const progress = await getLessonProgress(user.id);
+  const progressMap = await getLessonProgress(user.id);
+  // Plain JSON for the client component — completed counts keyed by slug.
+  const progress = Object.fromEntries(
+    [...progressMap.entries()].map(([slug, p]) => [slug, p.completedCount]),
+  );
 
   return (
     <div className="flex min-h-screen flex-col bg-neutral-50">
@@ -43,30 +47,8 @@ async function Catalog() {
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-4xl flex-1 space-y-8 px-4 py-8 sm:px-6">
-        {categories.map((category) => (
-          <section key={category} aria-labelledby={`cat-${category}`}>
-            <h2
-              id={`cat-${category}`}
-              className="mb-3 text-xs font-semibold uppercase tracking-wide text-neutral-400"
-            >
-              {category}
-            </h2>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {allLessons
-                .filter((lesson) => lesson.category === category)
-                .map((lesson) => (
-                  <LessonCard
-                    key={lesson.slug}
-                    lesson={lesson}
-                    completedCount={
-                      progress.get(lesson.slug)?.completedCount ?? 0
-                    }
-                  />
-                ))}
-            </div>
-          </section>
-        ))}
+      <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-8 sm:px-6">
+        <LessonBrowser summaries={lessonSummaries} progress={progress} />
       </main>
     </div>
   );

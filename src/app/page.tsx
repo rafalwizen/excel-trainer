@@ -1,6 +1,7 @@
 import { Fragment, Suspense } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { difficultyLabel } from "@/content/difficulty";
 import { allLessons } from "@/content/registry";
 import type { Lesson } from "@/content/schema";
 import { plPlural } from "@/lib/plural";
@@ -278,6 +279,8 @@ function HowItWorks() {
 }
 
 function LessonsSection() {
+  // A taste of the catalog — the full, filterable list lives on /lekcje.
+  const featured = allLessons.slice(0, 6);
   return (
     <section className="bg-white">
       <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
@@ -289,11 +292,12 @@ function LessonsSection() {
             href="/lekcje"
             className="text-sm font-medium text-green-700 hover:underline"
           >
-            Wszystkie lekcje
+            Zobacz wszystkie {allLessons.length}{" "}
+            {plPlural(allLessons.length, "lekcję", "lekcje", "lekcji")}
           </Link>
         </div>
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {allLessons.map((lesson) => (
+          {featured.map((lesson) => (
             <LessonPreview key={lesson.slug} lesson={lesson} />
           ))}
         </div>
@@ -314,14 +318,18 @@ function LessonPreview({ lesson }: { lesson: Lesson }) {
       <p className="text-sm leading-relaxed text-neutral-600">
         {lesson.shortDescription}
       </p>
-      <div className="mt-auto flex items-center justify-between pt-1 text-xs text-neutral-500">
-        <span className="flex items-center gap-2">
-          <span className="text-amber-500">
+      <div className="mt-auto flex flex-wrap items-center justify-between gap-x-2 gap-y-1 pt-1 text-xs text-neutral-500">
+        <span className="flex flex-wrap items-center gap-2">
+          <span
+            className="text-amber-500"
+            title={`Poziom ${difficultyLabel(lesson.difficulty)}`}
+          >
             {"★".repeat(lesson.difficulty)}
             <span className="text-neutral-300">
               {"★".repeat(3 - lesson.difficulty)}
             </span>
           </span>
+          <span>{difficultyLabel(lesson.difficulty)}</span>
           <span>
             {lesson.tasks.length}{" "}
             {plPlural(lesson.tasks.length, "zadanie", "zadania", "zadań")}

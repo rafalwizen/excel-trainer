@@ -17,8 +17,10 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const lesson = getLesson(slug);
+  if (!lesson) return { title: "Lekcja — Excel Trainer" };
   return {
-    title: lesson ? `${lesson.title} — Excel Trainer` : "Lekcja — Excel Trainer",
+    title: `${lesson.title} — Excel Trainer`,
+    description: `${lesson.shortDescription} Nauczysz się: ${lesson.learningGoals.slice(0, 3).join("; ")}.`,
   };
 }
 
@@ -54,5 +56,17 @@ async function LessonContent({
   const user = await getCurrentUser();
   const initialCompleted = await getCompletedTaskIndexes(user.id, slug);
 
-  return <LessonRunner lesson={lesson} initialCompleted={initialCompleted} />;
+  // Resolve prerequisite titles server-side so the runner stays client-light.
+  const prerequisites = lesson.prerequisites.map((prereqSlug) => ({
+    slug: prereqSlug,
+    title: getLesson(prereqSlug)?.title ?? prereqSlug,
+  }));
+
+  return (
+    <LessonRunner
+      lesson={lesson}
+      prerequisites={prerequisites}
+      initialCompleted={initialCompleted}
+    />
+  );
 }
