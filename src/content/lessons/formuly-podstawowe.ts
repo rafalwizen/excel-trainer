@@ -1,4 +1,4 @@
-import type { Lesson, WorkbookInit } from "../schema";
+import { workbook, type LessonInput, type WorkbookInit } from "../schema";
 
 /**
  * Lesson 2 — the first formulas over a fixed price table. The Univer engine
@@ -20,21 +20,23 @@ function priceTable(
   for (const [row, cols] of Object.entries(extraRows)) {
     rows[row] = { ...rows[row], ...cols };
   }
-  return {
-    sheetName: "Arkusz1",
-    rowCount: 20,
-    columnCount: 8,
-    cellData: rows,
-  };
+  return workbook("Arkusz1", 20, 8, rows);
 }
 
-export const formulyPodstawoweLesson: Lesson = {
+export const formulyPodstawoweLesson: LessonInput = {
   slug: "formuly-podstawowe",
   title: "Formuły podstawowe: SUM, AVERAGE, MIN, MAX",
   shortDescription:
     "Pierwsze formuły: SUM, AVERAGE, MIN, MAX i COUNT na tabeli z cenami produktów.",
-  category: "Formuły",
+  category: "Formuły i funkcje",
   difficulty: 1,
+  learningGoals: [
+    "Pisać pierwsze formuły i sumować zakresy funkcją SUM",
+    "Liczyć średnią, minimum i maksimum (AVERAGE, MIN, MAX)",
+    "Stosować formuły odwołujące się do komórek, np. =B2*1.23",
+    "Liczyć komórki z liczbami funkcją COUNT",
+  ],
+  estimatedMinutes: 20,
   tasks: [
     {
       title: "Twoja pierwsza formuła — SUM",

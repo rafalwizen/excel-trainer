@@ -1,4 +1,4 @@
-import type { Lesson, WorkbookInit } from "../schema";
+import { workbook, type LessonInput, type WorkbookInit } from "../schema";
 
 /**
  * Lesson 3 — relative vs absolute references, taught on VAT and a discount:
@@ -25,12 +25,7 @@ function productSheet(
   for (const [row, cols] of Object.entries(extraRows)) {
     rows[row] = { ...rows[row], ...cols };
   }
-  return {
-    sheetName: "Arkusz1",
-    rowCount: 20,
-    columnCount: 10,
-    cellData: rows,
-  };
+  return workbook("Arkusz1", 20, 10, rows);
 }
 
 // The brutto formula every task builds on, filled down across rows 2-6.
@@ -42,13 +37,19 @@ const bruttoFormulas: Record<string, Record<string, { f: string }>> = {
   "5": { "2": { f: "=B6*(1+$F$1)" } },
 };
 
-export const adresowanieWzgledneBezwzgledneLesson: Lesson = {
+export const adresowanieWzgledneBezwzgledneLesson: LessonInput = {
   slug: "adresowanie-wzgledne-bezwzgledne",
   title: "Adresowanie względne i bezwzględne",
   shortDescription:
     "Względne B2 czy bezwzględne $F$1? Policz VAT i rabat, kopiując jedną formułę na całą kolumnę.",
-  category: "Adresowanie",
+  category: "Formuły i funkcje",
   difficulty: 2,
+  learningGoals: [
+    "Rozróżniać adresowanie względne (B2) i bezwzględne ($F$1)",
+    "Kopiować jedną formułę na całą kolumnę uchwytem wypełniania",
+    "Budować formuły VAT i rabatu z jednym parametrem w osobnej komórce",
+  ],
+  estimatedMinutes: 25,
   tasks: [
     {
       title: "Stawka VAT w jednej komórce",
