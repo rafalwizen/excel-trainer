@@ -80,7 +80,7 @@ export const rangeValuesCheckSchema = z.object({
   sheet: z.string().optional(),
   range: z.string(),
   /** One value per cell of the range (row-major); null means "expect empty". */
-  expected: z.array(z.union([z.string(), z.number(), z.null()])),
+  expected: z.array(z.union([z.string(), z.number(), z.boolean(), z.null()])),
   tolerance: z.number().positive().optional(),
 });
 
@@ -117,7 +117,7 @@ export const rangeValuesUnorderedCheckSchema = z.object({
   sheet: z.string().optional(),
   range: z.string(),
   /** Same length as the range size; order does not matter; null = empty cell. */
-  expected: z.array(z.union([z.string(), z.number(), z.null()])),
+  expected: z.array(z.union([z.string(), z.number(), z.boolean(), z.null()])),
   tolerance: z.number().positive().optional(),
 });
 
