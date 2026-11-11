@@ -25,7 +25,8 @@ function ordersSheet(
   return workbook("Zamówienia", 20, 10, rows);
 }
 
-// Free-shipping flags for the whole column, prefilled from task 2 on.
+// Free-shipping flags for the whole column, prefilled from task 3 on
+// (task 2 is where the learner copies C2 down themselves).
 const shippingFlags: Record<string, Record<string, { f: string }>> = {
   "1": { "2": { f: '=IF(B2>=500,"TAK","NIE")' } },
   "2": { "2": { f: '=IF(B3>=500,"TAK","NIE")' } },
@@ -79,7 +80,8 @@ export const logikaJezeliLesson: LessonInput = {
         "Adres `B2` przesuwa się na B3, B4…, więc każdy wiersz sprawdzany jest dla swojej kwoty.",
       initialWorkbook: ordersSheet({
         "0": { "2": { v: "Darmowa wysyłka" } },
-        ...shippingFlags,
+        // Only C2 (the previous task's result) — the learner copies it down.
+        "1": { "2": { f: '=IF(B2>=500,"TAK","NIE")' } },
       }),
       hints: [
         "Uchwyt wypełniania: mały kwadrat w prawym dolnym rogu zaznaczonej C2 — przeciągnij go do C7.",

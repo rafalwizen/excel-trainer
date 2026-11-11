@@ -29,6 +29,7 @@ function productSheet(
 }
 
 // The brutto formula every task builds on, filled down across rows 2-6.
+// Task 3 (copy down) starts with ONLY C2 — the learner fills C3:C6.
 const bruttoFormulas: Record<string, Record<string, { f: string }>> = {
   "1": { "2": { f: "=B2*(1+$F$1)" } },
   "2": { "2": { f: "=B3*(1+$F$1)" } },
@@ -98,7 +99,8 @@ export const adresowanieWzgledneBezwzgledneLesson: LessonInput = {
         "na tym polega różnica między adresowaniem względnym i bezwzględnym.",
       initialWorkbook: productSheet({
         "0": { "4": { v: "Stawka VAT" }, "5": { v: 0.23 } },
-        ...bruttoFormulas,
+        // Only C2 (the previous task's result) — the learner copies it down.
+        "1": { "2": { f: "=B2*(1+$F$1)" } },
       }),
       hints: [
         "Uchwyt wypełniania pojawi się, gdy najedziesz kursorem na prawy dolny róg zaznaczonej komórki.",

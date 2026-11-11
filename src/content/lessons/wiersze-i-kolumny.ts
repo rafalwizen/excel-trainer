@@ -87,7 +87,9 @@ export const wierszeIKolumnyLesson: LessonInput = {
       checks: [
         {
           type: "rangeValues",
-          range: "A1:B5",
+          // Row 6 must be EMPTY after the deletion — checking only A1:B5
+          // would pass with Sok still in place.
+          range: "A1:B6",
           expected: [
             "Produkt",
             "Cena (zł)",
@@ -99,6 +101,8 @@ export const wierszeIKolumnyLesson: LessonInput = {
             15,
             "Kakao",
             11,
+            null,
+            null,
           ],
         },
       ],
