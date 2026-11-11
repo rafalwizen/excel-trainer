@@ -314,6 +314,131 @@ describe("lessonInvariants", () => {
     });
     expect(lessonInvariants(lesson)).toEqual([]);
   });
+
+  it("flags a cellValue check presolved by the initial workbook", () => {
+    const lesson = lessonSchema.parse({
+      ...validLesson,
+      tasks: [
+        {
+          ...validTask,
+          initialWorkbook: {
+            sheets: [
+              { ...validTask.initialWorkbook.sheets[0], cellData: { "0": { "0": { v: "Excel" } } } },
+            ],
+          },
+          checks: [{ type: "cellValue", cell: "A1", expected: "Excel" }],
+        },
+      ],
+    });
+    expect(lessonInvariants(lesson).join("\n")).toContain("bez pracy ucznia");
+  });
+
+  it("flags a cellFormula check presolved by the initial workbook", () => {
+    const lesson = lessonSchema.parse({
+      ...validLesson,
+      tasks: [
+        {
+          ...validTask,
+          initialWorkbook: {
+            sheets: [
+              {
+                ...validTask.initialWorkbook.sheets[0],
+                cellData: { "1": { "1": { f: "=SUMA(A1:A3)" } } },
+              },
+            ],
+          },
+          checks: [
+            { type: "cellFormula", cell: "B2", aliases: ["=SUM(A1:A3)"] },
+          ],
+        },
+      ],
+    });
+    expect(lessonInvariants(lesson).join("\n")).toContain("bez pracy ucznia");
+  });
+
+  it("flags a rangeValues check presolved by the initial workbook", () => {
+    const lesson = lessonSchema.parse({
+      ...validLesson,
+      tasks: [
+        {
+          ...validTask,
+          initialWorkbook: {
+            sheets: [
+              {
+                ...validTask.initialWorkbook.sheets[0],
+                cellData: { "0": { "1": { v: 1 } }, "1": { "1": { v: 2 } } },
+              },
+            ],
+          },
+          checks: [{ type: "rangeValues", range: "B1:B2", expected: [1, 2] }],
+        },
+      ],
+    });
+    expect(lessonInvariants(lesson).join("\n")).toContain("bez pracy ucznia");
+  });
+
+  it("accepts a carry-over formula that differs from the expected one", () => {
+    const lesson = lessonSchema.parse({
+      ...validLesson,
+      tasks: [
+        {
+          ...validTask,
+          initialWorkbook: {
+            sheets: [
+              {
+                ...validTask.initialWorkbook.sheets[0],
+                cellData: { "0": { "0": { f: "=SUM(A1:A3)" } } },
+              },
+            ],
+          },
+          checks: [
+            { type: "cellFormula", cell: "A1", aliases: ["=SUM(A1:A9)"] },
+            { type: "cellValue", cell: "B1", expected: "Excel" },
+          ],
+        },
+      ],
+    });
+    expect(lessonInvariants(lesson)).toEqual([]);
+  });
+
+  it("accepts a cellValue guard on a cell the task style-checks", () => {
+    const lesson = lessonSchema.parse({
+      ...validLesson,
+      tasks: [
+        {
+          ...validTask,
+          initialWorkbook: {
+            sheets: [
+              { ...validTask.initialWorkbook.sheets[0], cellData: { "0": { "0": { v: "Excel" } } } },
+            ],
+          },
+          checks: [
+            { type: "cellStyle", cell: "A1", bold: true },
+            { type: "cellValue", cell: "A1", expected: "Excel" },
+          ],
+        },
+      ],
+    });
+    expect(lessonInvariants(lesson)).toEqual([]);
+  });
+
+  it("accepts an initial value that differs from the expected one", () => {
+    const lesson = lessonSchema.parse({
+      ...validLesson,
+      tasks: [
+        {
+          ...validTask,
+          initialWorkbook: {
+            sheets: [
+              { ...validTask.initialWorkbook.sheets[0], cellData: { "0": { "0": { v: "zle" } } } },
+            ],
+          },
+          checks: [{ type: "cellValue", cell: "A1", expected: "Excel" }],
+        },
+      ],
+    });
+    expect(lessonInvariants(lesson)).toEqual([]);
+  });
 });
 
 // --- registry (imports the real lesson files, so it validates shipped content) ---
