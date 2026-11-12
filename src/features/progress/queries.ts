@@ -15,8 +15,10 @@ export type LessonProgress = {
  * One GROUP BY query; counts come back as strings (bigint), so cast here.
  */
 export async function getLessonProgress(
-  userId: string,
+  userId: string | null,
 ): Promise<Map<string, LessonProgress>> {
+  // Anonymous visitors get an empty map — catalog pages are public.
+  if (!userId) return new Map();
   const rows = await db
     .select({
       lessonSlug: taskProgress.lessonSlug,
@@ -41,9 +43,10 @@ export async function getLessonProgress(
 
 /** Indexes of tasks of one lesson already completed by the user. */
 export async function getCompletedTaskIndexes(
-  userId: string,
+  userId: string | null,
   slug: string,
 ): Promise<number[]> {
+  if (!userId) return [];
   const rows = await db
     .select({ taskIndex: taskProgress.taskIndex })
     .from(taskProgress)

@@ -22,11 +22,19 @@ function load(): Lesson[] {
       );
     }
   }
+  const bySlug = new Map(lessons.map((lesson) => [lesson.slug, lesson]));
   for (const lesson of lessons) {
     for (const prerequisite of lesson.prerequisites) {
-      if (!slugs.has(prerequisite)) {
+      const target = bySlug.get(prerequisite);
+      if (!target) {
         throw new Error(
           `Lekcja ${lesson.slug} wymaga nieistniejącej lekcji: ${prerequisite}`,
+        );
+      }
+      // A gated prerequisite would lock anonymous learners out of the path.
+      if (target.requiresAuth) {
+        throw new Error(
+          `Lekcja ${prerequisite} wymaga logowania, ale jest prerekwizytem ${lesson.slug} — prerekwizyty muszą być publiczne`,
         );
       }
     }

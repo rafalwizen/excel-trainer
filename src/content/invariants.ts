@@ -103,9 +103,10 @@ export function lessonInvariants(lesson: Lesson): string[] {
       if (check.type === "cellFormula") {
         const pos = parseCellRef(check.cell)!;
         const datum = initialDatum(pos.row, pos.col);
+        const formula = datum?.f;
         if (
-          datum?.f &&
-          check.aliases.some((alias) => normalizeFormula(alias) === normalizeFormula(datum.f))
+          formula &&
+          check.aliases.some((alias) => normalizeFormula(alias) === normalizeFormula(formula))
         ) {
           problems.push(
             `${where}: komórka ${check.cell} ma już oczekiwaną formułę w stanie początkowym — check zaliczy się bez pracy ucznia`,

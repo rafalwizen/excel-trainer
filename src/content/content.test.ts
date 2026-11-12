@@ -150,6 +150,11 @@ describe("lesson schema", () => {
     ).toThrow();
   });
 
+  it("requiresAuth defaults to false", () => {
+    const lesson = lessonSchema.parse(validLesson);
+    expect(lesson.requiresAuth).toBe(false);
+  });
+
   it("rejects more than 3 hints", () => {
     expect(() =>
       lessonSchema.parse({

@@ -1,10 +1,10 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { allLessons, getLesson } from "@/content/registry";
 import { LessonRunner } from "@/features/lessons/LessonRunner";
 import { getCompletedTaskIndexes } from "@/features/progress/queries";
-import { getCurrentUser } from "@/lib/session";
+import { getSessionUser } from "@/lib/session";
 
 export function generateStaticParams() {
   return allLessons.map((lesson) => ({ slug: lesson.slug }));
@@ -52,9 +52,11 @@ async function LessonContent({
   const lesson = getLesson(slug);
   if (!lesson) notFound();
 
-  // Progress restore requires a session; anonymous users are sent to /logowanie.
-  const user = await getCurrentUser();
-  const initialCompleted = await getCompletedTaskIndexes(user.id, slug);
+  // Lesson pages are public (SEO); only auth-gated lessons redirect.
+  // Progress restore is skipped for anonymous visitors (empty list).
+  const user = await getSessionUser();
+  if (lesson.requiresAuth && !user) redirect("/logowanie");
+  const initialCompleted = await getCompletedTaskIndexes(user?.id ?? null, slug);
 
   // Resolve prerequisite titles server-side so the runner stays client-light.
   const prerequisites = lesson.prerequisites.map((prereqSlug) => ({

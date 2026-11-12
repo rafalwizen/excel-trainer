@@ -158,6 +158,12 @@ export const lessonSchema = z.object({
   estimatedMinutes: z.number().int().min(5).max(120),
   /** Slugs of lessons worth doing first (validated by the registry). */
   prerequisites: z.array(z.string().regex(/^[a-z0-9-]+$/)).max(3).default([]),
+  /**
+   * When true, the lesson page redirects anonymous visitors to /logowanie.
+   * Auth-gated lessons are excluded from the sitemap. A lesson that serves
+   * as another lesson's prerequisite must stay public (registry-enforced).
+   */
+  requiresAuth: z.boolean().default(false),
   tasks: z.array(taskSchema).min(1),
 });
 

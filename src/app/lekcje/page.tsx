@@ -5,7 +5,7 @@ import { LessonBrowser } from "@/components/lessons/LessonBrowser";
 import { allLessons, lessonSummaries } from "@/content/registry";
 import { getLessonProgress } from "@/features/progress/queries";
 import { plPlural } from "@/lib/plural";
-import { getCurrentUser } from "@/lib/session";
+import { getSessionUser } from "@/lib/session";
 
 export const metadata: Metadata = {
   title: "Lekcje — Excel Trainer",
@@ -21,8 +21,9 @@ export default function LessonsPage() {
 }
 
 async function Catalog() {
-  const user = await getCurrentUser(); // redirects to /logowanie when anonymous
-  const progressMap = await getLessonProgress(user.id);
+  // Catalog is public; anonymous visitors browse with no progress bars.
+  const user = await getSessionUser();
+  const progressMap = await getLessonProgress(user?.id ?? null);
   // Plain JSON for the client component — completed counts keyed by slug.
   const progress = Object.fromEntries(
     [...progressMap.entries()].map(([slug, p]) => [slug, p.completedCount]),
