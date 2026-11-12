@@ -47,6 +47,8 @@ export const tekstPodstawyLesson: LessonInput = {
   title: "Funkcje tekstowe: podstawy",
   shortDescription:
     "CONCAT, LEFT, RIGHT, TRIM i LEN — porządkowanie danych wciśniętych w jedną kolumnę przez stary system.",
+  seoDescription:
+    "Funkcje tekstowe dla początkujących: CONCAT, LEFT, RIGHT, TRIM i LEN. Rozbij dane wciśnięte w jedną kolumnę przez stary system, sklej pola i usuń zbędne spacje — pierwszy krok do czystych danych.",
   category: "Tekst i daty",
   difficulty: 2,
   estimatedMinutes: 25,

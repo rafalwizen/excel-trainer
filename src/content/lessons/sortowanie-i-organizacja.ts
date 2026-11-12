@@ -32,6 +32,8 @@ export const sortowanieIOrganizacjaLesson: LessonInput = {
   title: "Sortowanie i organizacja danych",
   shortDescription:
     "Porządkowanie listy: najpierw ręcznie, potem jedną formułą SORT — rosnąco, malejąco i całą tabelę.",
+  seoDescription:
+    "Sortowanie w Excelu: najpierw porządkowanie listy ręcznie, potem jedna formuła SORT — rosnąco, malejąco i całą tabelą. Zobacz różnicę i wybierz sposób dopasowany do zadania.",
   category: "Praca z danymi",
   difficulty: 2,
   estimatedMinutes: 25,

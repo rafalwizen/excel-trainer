@@ -38,6 +38,8 @@ export const formatowanieLiczbLesson: LessonInput = {
   title: "Formatowanie liczb",
   shortDescription:
     "Waluta, procent i miejsca dziesiętne: jak sprawić, by kwoty wyglądały jak pieniądze, a nie surowe liczby.",
+  seoDescription:
+    "Formatowanie liczb w Excelu: waluta, procent i miejsca dziesiętne. Naucz się sprawić, by kwoty wyglądały jak pieniądze, a nie surowe liczby — i zrozum różnicę między wyglądem a wartością komórki.",
   category: "Formatowanie",
   difficulty: 1,
   learningGoals: [

@@ -15,6 +15,16 @@ export function lessonInvariants(lesson: Lesson): string[] {
   const problems: string[] = [];
   const at = (taskIndex: number) => `lekcja ${lesson.slug}, zadanie ${taskIndex + 1}`;
 
+  // SEO copy is optional, but when present it must be a real meta description.
+  if (
+    lesson.seoDescription !== undefined &&
+    (lesson.seoDescription.length < 80 || lesson.seoDescription.length > 300)
+  ) {
+    problems.push(
+      `lekcja ${lesson.slug}: seoDescription musi mieć 80–300 znaków (ma ${lesson.seoDescription.length})`,
+    );
+  }
+
   lesson.tasks.forEach((task, taskIndex) => {
     const sheets = task.initialWorkbook.sheets;
     const sheetNames = new Set(sheets.map((sheet) => sheet.name));

@@ -28,6 +28,8 @@ export const formulyPodstawoweLesson: LessonInput = {
   title: "Formuły podstawowe: SUM, AVERAGE, MIN, MAX",
   shortDescription:
     "Pierwsze formuły: SUM, AVERAGE, MIN, MAX i COUNT na tabeli z cenami produktów.",
+  seoDescription:
+    "Pierwsze formuły w Excelu: SUM, AVERAGE, MIN, MAX i COUNT na tabeli z cenami produktów. Naucz się zaczynać formułę od znaku =, używać zakresów i czytać wyniki — solidna podstawa dalszej nauki.",
   category: "Formuły i funkcje",
   difficulty: 1,
   learningGoals: [

@@ -48,6 +48,8 @@ export const datyPodstawyLesson: LessonInput = {
   title: "Praca z datami",
   shortDescription:
     "DAYS, YEAR, MONTH, EDATE i NETWORKDAYS: terminy projektów liczone datami, nie na palcach.",
+  seoDescription:
+    "Daty w Excelu: DAYS, YEAR, MONTH, EDATE i NETWORKDAYS. Policz terminy projektów, dni robocze i miesiące do przeglądu — daty przestają być zagadką, a formuły liczą wszystko za Ciebie.",
   category: "Tekst i daty",
   difficulty: 2,
   estimatedMinutes: 20,

@@ -13,6 +13,8 @@ export const podstawyNawigacjiLesson: LessonInput = {
   title: "Podstawy arkusza: nawigacja i wpisywanie danych",
   shortDescription:
     "Klikanie, wpisywanie i edycja komórek oraz adresy typu B3 — pierwszy krok w Excelu.",
+  seoDescription:
+    "Poznaj pierwsze kroki w Excelu: nawigację po arkuszu, adresy komórek typu B3, wpisywanie tekstu i liczb oraz edycję zawartości. Lekcja dla zupełnie początkujących — klikasz, piszesz, poprawiasz i od razu widzisz efekt.",
   category: "Podstawy",
   difficulty: 1,
   learningGoals: [

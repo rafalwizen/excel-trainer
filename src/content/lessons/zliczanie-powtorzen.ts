@@ -48,6 +48,8 @@ export const zliczaniePowtorzenLesson: LessonInput = {
   title: "Zliczanie powtórzeń",
   shortDescription:
     "COUNTIF na duplikatach: policz, ile razy wraca klient, oflaguj powtórzenia i zrób z tego raport.",
+  seoDescription:
+    "COUNTIF na duplikatach: policz, ile razy wraca klient, i oflaguj powtórzenia. Z listy transakcji zrób raport powtarzalności — typowe zadanie w CRM i codziennej obsłudze klienta.",
   category: "Praca z danymi",
   difficulty: 2,
   estimatedMinutes: 20,

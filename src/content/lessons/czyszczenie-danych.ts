@@ -47,6 +47,8 @@ export const czyszczenieDanychLesson: LessonInput = {
   title: "Czyszczenie danych",
   shortDescription:
     "TRIM z PROPER, usuwanie prefiksów SUBSTITUTE i rozbijanie TEXTSPLIT — z bałaganu importu do czystej listy.",
+  seoDescription:
+    "Czyszczenie danych po imporcie: TRIM z PROPER, usuwanie prefiksów SUBSTITUTE i rozbijanie tekstów TEXTSPLIT. Z bałaganu importu do czystej listy, z której da się zrobić raport.",
   category: "Praca z danymi",
   difficulty: 3,
   estimatedMinutes: 35,

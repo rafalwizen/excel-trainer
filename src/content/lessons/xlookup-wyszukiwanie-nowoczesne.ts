@@ -39,6 +39,8 @@ export const xlookupWyszukiwanieNowoczesneLesson: LessonInput = {
   title: "XLOOKUP — nowoczesne wyszukiwanie",
   shortDescription:
     "XLOOKUP: bez numerowania kolumn, z obsługą braków i wyszukiwaniem w lewo — następca VLOOKUP.",
+  seoDescription:
+    "XLOOKUP: nowoczesne wyszukiwanie bez numerowania kolumn, z obsługą braków i wyszukiwaniem także w lewo. Poznaj następcę VLOOKUP na realnych danych zamówień — krótsze i bezpieczniejsze formuły.",
   category: "Wyszukiwanie",
   difficulty: 3,
   estimatedMinutes: 30,

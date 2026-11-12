@@ -47,6 +47,8 @@ export const wypelnianieSeriamiLesson: LessonInput = {
   title: "Wypełnianie seriami",
   shortDescription:
     "Uchwyt wypełniania: szybkie serie liczb (1, 2, 3…) i kopiowanie tekstu — i kiedy jest które.",
+  seoDescription:
+    "Uchwyt wypełniania to najkrótsza droga do serii liczb 1, 2, 3…, dni tygodnia czy kopiowania tekstu. Zobacz, kiedy przeciągnięcie tworzy serię, a kiedy kopiuje — i zaoszczędź minuty przy każdej tabeli.",
   category: "Podstawy",
   difficulty: 1,
   learningGoals: [

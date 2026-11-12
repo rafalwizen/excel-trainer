@@ -31,6 +31,8 @@ export const zaokraglanieIPrecyzjaLesson: LessonInput = {
   title: "Zaokrąglanie i precyzja",
   shortDescription:
     "ROUND, ROUNDUP i ROUNDDOWN — oraz różnica między zaokrągleniem wartości a samą zmianą wyglądu.",
+  seoDescription:
+    "ROUND, ROUNDUP i ROUNDDOWN: zaokrąglanie w górę, w dół i matematyczne. Zrozum różnicę między zaokrągleniem wartości a zmianą samego wyglądu — to jedna z najczęstszych pułapek w raportach.",
   category: "Formatowanie",
   difficulty: 1,
   learningGoals: [

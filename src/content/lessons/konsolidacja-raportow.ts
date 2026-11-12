@@ -66,6 +66,8 @@ export const konsolidacjaRaportowLesson: LessonInput = {
   title: "Konsolidacja raportów",
   shortDescription:
     "Dwa oddziały, dwie karty, jeden raport: sumowanie po arkuszach i udziały procentowe kategorii.",
+  seoDescription:
+    "Konsolidacja raportów: dwa oddziały, dwie karty, jeden raport. Sumuj dane po arkuszach i policz udziały procentowe kategorii — finałowa lekcja łącząca formuły, arkusze i myślenie raportowe.",
   category: "Raporty i analiza",
   difficulty: 3,
   estimatedMinutes: 30,

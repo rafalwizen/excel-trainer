@@ -37,6 +37,8 @@ export const jezeliWielokrotneLesson: LessonInput = {
   title: "IFS i SWITCH",
   shortDescription:
     "Wiele warunków bez wieży zagnieżdżonych IF: IFS dla progów, SWITCH dla map kodów.",
+  seoDescription:
+    "Wiele warunków bez wieży zagnieżdżonych IF: funkcje IFS dla progów i SWITCH dla map kodów. Naucz się czytelnych formuł warunkowych, które łatwo potem zrozumieć i zmienić.",
   category: "Formuły i funkcje",
   difficulty: 3,
   estimatedMinutes: 25,

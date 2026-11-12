@@ -42,6 +42,8 @@ export const wyszukajPionowoLesson: LessonInput = {
   title: "WYSZUKAJ.PIONOWO (VLOOKUP)",
   shortDescription:
     "VLOOKUP: arkusz sam znajduje cenę i nazwę po kodzie produktu — dokładnie tak działa cennik w zamówieniu.",
+  seoDescription:
+    "VLOOKUP (WYSZUKAJ.PIONOWO) krok po kroku: arkusz sam znajduje cenę i nazwę po kodzie produktu. Zrozum numerowanie kolumn i dopasowanie dokładne — tak działa cennik w każdym zamówieniu.",
   category: "Wyszukiwanie",
   difficulty: 2,
   estimatedMinutes: 25,

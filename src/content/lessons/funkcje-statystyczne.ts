@@ -35,6 +35,8 @@ export const funkcjeStatystyczneLesson: LessonInput = {
   title: "Funkcje statystyczne w praktyce",
   shortDescription:
     "COUNTA, COUNT, MEDIAN, LARGE i SMALL na wynikach szkolenia — statystyka, która naprawdę przydaje się w biurze.",
+  seoDescription:
+    "COUNTA, COUNT, MEDIAN, LARGE i SMALL na wynikach szkolenia. Policz wypełnione komórki, medianę i najlepsze wyniki — statystyka, która naprawdę przydaje się w codziennej pracy biurowej.",
   category: "Formuły i funkcje",
   difficulty: 1,
   learningGoals: [

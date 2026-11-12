@@ -31,6 +31,8 @@ export const wpisywanieIPoprawianieDanychLesson: LessonInput = {
   title: "Wpisywanie i poprawianie danych",
   shortDescription:
     "Tekst, liczby i daty w praktyce: wpisywanie, nadpisywanie komórki i edycja treści w miejscu.",
+  seoDescription:
+    "Naucz się wpisywać tekst, liczby i daty tak, żeby Excel je rozpoznał, nadpisywać komórki i edytować treść w miejscu. Praktyczna lekcja dla początkujących, którzy chcą pewnie poruszać się po arkuszu.",
   category: "Podstawy",
   difficulty: 1,
   learningGoals: [

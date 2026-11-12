@@ -29,6 +29,8 @@ export const wierszeIKolumnyLesson: LessonInput = {
   title: "Wiersze i kolumny",
   shortDescription:
     "Wstawianie i usuwanie wierszy oraz kolumn przez menu kontekstowe, bez psucia reszty tabeli.",
+  seoDescription:
+    "Wstawianie i usuwanie wierszy oraz kolumn przez menu kontekstowe to codzienna robota w każdej tabeli. Naucz się dodawać strukturę bez psucia formuł i reszty danych — krok po kroku, na tabeli faktur.",
   category: "Podstawy",
   difficulty: 1,
   learningGoals: [

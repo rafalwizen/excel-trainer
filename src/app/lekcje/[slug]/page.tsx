@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { allLessons, getLesson } from "@/content/registry";
 import { LessonRunner } from "@/features/lessons/LessonRunner";
+import { LessonSeoSection } from "@/features/lessons/LessonSeoSection";
 import { getCompletedTaskIndexes } from "@/features/progress/queries";
 import { getSessionUser } from "@/lib/session";
 
@@ -20,7 +21,9 @@ export async function generateMetadata({
   if (!lesson) return { title: "Lekcja — Excel Trainer" };
   return {
     title: `${lesson.title} — Excel Trainer`,
-    description: `${lesson.shortDescription} Nauczysz się: ${lesson.learningGoals.slice(0, 3).join("; ")}.`,
+    description:
+      lesson.seoDescription ??
+      `${lesson.shortDescription} Nauczysz się: ${lesson.learningGoals.slice(0, 3).join("; ")}.`,
   };
 }
 
@@ -65,10 +68,13 @@ async function LessonContent({
   }));
 
   return (
-    <LessonRunner
-      lesson={lesson}
-      prerequisites={prerequisites}
-      initialCompleted={initialCompleted}
-    />
+    <>
+      <LessonRunner
+        lesson={lesson}
+        prerequisites={prerequisites}
+        initialCompleted={initialCompleted}
+      />
+      <LessonSeoSection lesson={lesson} />
+    </>
   );
 }

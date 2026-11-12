@@ -69,6 +69,8 @@ export const daneWieleArkuszyLesson: LessonInput = {
   title: "Dane w wielu arkuszach",
   shortDescription:
     "Jeden skoroszyt, trzy arkusze: odwołania Sprzedaz!B2, sumy z innych kart i nowy arkusz Notatki.",
+  seoDescription:
+    "Praca na wielu arkuszach: odwołania typu Sprzedaz!B2, sumy z innych kart i tworzenie nowego arkusza. Jeden skoroszyt, trzy karty — tak organizuje się większe pliki w codziennej pracy.",
   category: "Praca z danymi",
   difficulty: 3,
   estimatedMinutes: 25,

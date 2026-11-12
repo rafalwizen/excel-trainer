@@ -32,6 +32,8 @@ export const indeksPodajPozycjeLesson: LessonInput = {
   title: "INDEX + MATCH",
   shortDescription:
     "MATCH znajduje pozycję, INDEX wyciąga wartość — razem wyszukiwanie dwuwymiarowe bez numerowania kolumn.",
+  seoDescription:
+    "INDEX i MATCH: wyszukiwanie dwuwymiarowe bez numerowania kolumn. MATCH znajduje pozycję, INDEX wyciąga wartość — elastyczniejszy następca VLOOKUP i standard w profesjonalnych arkuszach.",
   category: "Wyszukiwanie",
   difficulty: 3,
   estimatedMinutes: 30,

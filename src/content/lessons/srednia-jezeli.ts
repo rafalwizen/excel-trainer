@@ -37,6 +37,8 @@ export const sredniaJezeliLesson: LessonInput = {
   title: "Średnie warunkowe: AVERAGEIF",
   shortDescription:
     "AVERAGEIF i AVERAGEIFS: średnia tylko dla wybranego regionu, produktu albo progu kwoty.",
+  seoDescription:
+    "AVERAGEIF i AVERAGEIFS: średnia tylko dla wybranego regionu, produktu albo progu kwoty. Policz np. średnią wartość zamówienia klienta premium — warunki przekładają się wprost na formułę.",
   category: "Formuły i funkcje",
   difficulty: 2,
   estimatedMinutes: 20,

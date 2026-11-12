@@ -41,6 +41,8 @@ export const logikaJezeliLesson: LessonInput = {
   title: "Logika: funkcja JEŻELI (IF)",
   shortDescription:
     "Funkcja IF: flagi TAK/NIE, rabat z progiem i klasyfikacja klientów w jednej formule.",
+  seoDescription:
+    "Funkcja IF (JEŻELI) w praktyce: flagi TAK/NIE, rabat z progiem i klasyfikacja klientów jedną formułą. Naucz się myśleć warunkowo — to most między podstawami a realnymi formułami w pracy.",
   category: "Formuły i funkcje",
   difficulty: 2,
   estimatedMinutes: 25,

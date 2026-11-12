@@ -42,6 +42,8 @@ export const tekstZaawansowanyLesson: LessonInput = {
   title: "Funkcje tekstowe: zaawansowane",
   shortDescription:
     "SUBSTITUTE, PROPER, MID i TEXTJOIN — doprowadzanie kartoteki do porządku jedną formułą na krok.",
+  seoDescription:
+    "SUBSTITUTE, PROPER, MID i TEXTJOIN: doprowadź kartotekę do porządku jedną formułą na krok. Lekcja dla znających podstawy funkcji tekstowych, którzy chcą automatyzować porządki w danych.",
   category: "Tekst i daty",
   difficulty: 3,
   estimatedMinutes: 35,

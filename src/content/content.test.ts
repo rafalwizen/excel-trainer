@@ -461,6 +461,15 @@ describe("lesson registry", () => {
     }
   });
 
+  it("every lesson ships a seoDescription of valid length", () => {
+    for (const lesson of allLessons) {
+      expect(lesson.seoDescription).toBeDefined();
+      const length = lesson.seoDescription?.length ?? 0;
+      expect(length).toBeGreaterThanOrEqual(80);
+      expect(length).toBeLessThanOrEqual(300);
+    }
+  });
+
   it("every lesson declares at least 3 learning goals and a time estimate", () => {
     for (const lesson of allLessons) {
       expect(lesson.learningGoals.length).toBeGreaterThanOrEqual(3);

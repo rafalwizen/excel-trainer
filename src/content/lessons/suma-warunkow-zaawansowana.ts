@@ -44,6 +44,8 @@ export const sumaWarunkowZaawansowanaLesson: LessonInput = {
   title: "Raporty warunkowe: SUMIFS i COUNTIFS",
   shortDescription:
     "Budżet pod lupą: SUMIFS i COUNTIFS liczą sumy i pozycje po dwóch kryteriach naraz.",
+  seoDescription:
+    "SUMIFS i COUNTIFS: sumy i liczniki po dwóch kryteriach naraz, np. kategoria i miesiąc. Budżet pod lupą — lekcja dla tych, którzy chcą realnie analizować rejestry, a nie tylko sumować.",
   category: "Raporty i analiza",
   difficulty: 3,
   estimatedMinutes: 35,

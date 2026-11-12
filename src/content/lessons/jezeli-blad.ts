@@ -33,6 +33,8 @@ export const jezeliBladLesson: LessonInput = {
   title: "Obsługa błędów: IFERROR",
   shortDescription:
     "IFERROR: zamiast krzyżyka #DIV/0! w raporcie — czytelny tekst albo zero, dokładnie tam, gdzie ma być.",
+  seoDescription:
+    "IFERROR zamiast krzyżyków: obsługa błędów #DIV/0! i #N/A w raportach. Naucz się zastępować błędy czytelnym tekstem albo zerem dokładnie tam, gdzie ma być — raporty przestają razić w oczy.",
   category: "Formuły i funkcje",
   difficulty: 2,
   estimatedMinutes: 20,

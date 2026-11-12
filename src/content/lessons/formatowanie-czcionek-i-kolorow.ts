@@ -36,6 +36,8 @@ export const formatowanieCzcionekIKolorowLesson: LessonInput = {
   title: "Formatowanie: czcionki i kolory",
   shortDescription:
     "Pogrub nagłówki, dodaj kolor wypełnienia i kursywę — tabela faktur stanie się czytelna na pierwszy rzut oka.",
+  seoDescription:
+    "Pogrubione nagłówki, kolor wypełnienia i kursywa zamieniają surową tabelę w raport czytelny na pierwszy rzut oka. Lekcja formatowania dla początkujących — na tabeli faktur, krok po kroku.",
   category: "Formatowanie",
   difficulty: 1,
   learningGoals: [

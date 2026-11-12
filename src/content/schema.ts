@@ -156,6 +156,12 @@ export const lessonSchema = z.object({
   learningGoals: z.array(z.string().min(8)).min(3).max(6),
   /** Rough time estimate in minutes, shown in the catalog. */
   estimatedMinutes: z.number().int().min(5).max(120),
+  /**
+   * Optional SEO description (80–300 chars, invariant-enforced) rendered in
+   * the page's server-side content section and used as the meta description
+   * fallback. Natural Polish, names the Excel features the lesson drills.
+   */
+  seoDescription: z.string().optional(),
   /** Slugs of lessons worth doing first (validated by the registry). */
   prerequisites: z.array(z.string().regex(/^[a-z0-9-]+$/)).max(3).default([]),
   /**

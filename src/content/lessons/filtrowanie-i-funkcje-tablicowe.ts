@@ -38,6 +38,8 @@ export const filtrowanieIFunkcjeTablicoweLesson: LessonInput = {
   title: "FILTER, UNIQUE i SORTBY",
   shortDescription:
     "Funkcje tablicowe: jedna formuła rozlewa całą listę — filtrowanie, unikaty i sortowanie bez kopiowania.",
+  seoDescription:
+    "Funkcje tablicowe FILTER, UNIQUE i SORTBY: jedna formuła rozlewa całą przefiltrowaną listę — bez kopiowania i bez makr. Filtrowanie, unikaty i sortowanie nowoczesnym Excelem.",
   category: "Praca z danymi",
   difficulty: 3,
   estimatedMinutes: 35,

@@ -34,6 +34,8 @@ export const funkcjeLogiczneLesson: LessonInput = {
   title: "Funkcje logiczne: ORAZ i LUB",
   shortDescription:
     "AND i OR: warunki, które muszą się zgadzać razem albo wystarczy jeden — i IF na ich kombinacji.",
+  seoDescription:
+    "AND i OR w Excelu: warunki, które muszą się zgadzać razem albo wystarczy jeden. Połącz je z IF i twórz formuły doprecyzowane dokładnie tak, jak wymaga tego raport.",
   category: "Formuły i funkcje",
   difficulty: 2,
   estimatedMinutes: 25,

@@ -31,6 +31,8 @@ export const sumaJezeliLesson: LessonInput = {
   title: "Sumowanie warunkowe: SUMIF i COUNTIF",
   shortDescription:
     "SUMIF i COUNTIF: suma i licznik tylko dla wierszy spełniających warunek — raport z rejestru faktur.",
+  seoDescription:
+    "SUMIF i COUNTIF: suma i liczba pozycji tylko dla wierszy spełniających warunek. Zbuduj raport z rejestru faktur — np. sprzedaż jednego klienta albo liczbę zaległych płatności.",
   category: "Formuły i funkcje",
   difficulty: 2,
   estimatedMinutes: 25,

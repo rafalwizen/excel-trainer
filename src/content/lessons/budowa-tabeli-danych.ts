@@ -51,6 +51,8 @@ export const budowaTabeliDanychLesson: LessonInput = {
   title: "Budowa czytelnej tabeli",
   shortDescription:
     "Tabela danych od zera: nagłówki, jeden typ danych w kolumnie i wpisy bez wpadającego w oko formatu.",
+  seoDescription:
+    "Zbuduj czytelną tabelę danych od zera: nagłówki, jeden typ danych w kolumnie, brak zbędnych formatów. Dobra tabela to fundament dalszej pracy — sortowanie, filtry i formuły działają tylko na porządnych danych.",
   category: "Podstawy",
   difficulty: 1,
   learningGoals: [

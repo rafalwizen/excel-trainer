@@ -43,6 +43,8 @@ export const adresowanieWzgledneBezwzgledneLesson: LessonInput = {
   title: "Adresowanie względne i bezwzględne",
   shortDescription:
     "Względne B2 czy bezwzględne $F$1? Policz VAT i rabat, kopiując jedną formułę na całą kolumnę.",
+  seoDescription:
+    "Adresowanie względne i bezwzględne: różnica między B2 a $F$1 i kiedy używać każdego. Policz VAT i rabat jedną formułą skopiowaną na całą kolumnę — lekcja, która porządkuje podstawy formuł raz na zawsze.",
   category: "Formuły i funkcje",
   difficulty: 2,
   learningGoals: [
