@@ -1,8 +1,9 @@
-# Excel Trainer
+# Ćwicz Excel
 
-Aplikacja webowa do nauki Excela przez praktyczne zadania. Użytkownik rozwiązuje
-zadania w arkuszu, który wygląda i zachowuje się jak prawdziwy Excel (Univer),
-wybiera tematy, zakłada konto i śledzi swój postęp.
+Aplikacja webowa do nauki Excela przez praktyczne zadania (domena produkcyjna:
+**cwicz-excel.pl**). Użytkownik rozwiązuje zadania w arkuszu, który wygląda
+i zachowuje się jak prawdziwy Excel (Univer), wybiera tematy, zakłada konto
+i śledzi swój postęp. Lekcje są publiczne (SEO), konto zapisuje postęp.
 
 ## Stack
 
@@ -39,7 +40,7 @@ z automatycznym certyfikatem Let's Encrypt).
 ### Wymagania
 
 - VPS z publicznym adresem IP i Dockerem (z wtyczką compose)
-- Domena z rekordem A wskazującym na IP serwera
+- Domena z rekordem A wskazującym na IP serwera (dla tej instalacji: `cwicz-excel.pl`)
 - Otwarte porty 80 i 443
 
 ### Konfiguracja
@@ -49,8 +50,11 @@ W katalogu projektu utwórz `.env`:
 ```env
 POSTGRES_PASSWORD=<silne hasło do bazy>
 BETTER_AUTH_SECRET=<openssl rand -base64 32>
-BASE_URL=https://twoja-domena.pl
+BASE_URL=https://cwicz-excel.pl
 ```
+
+`BASE_URL` musi wskazywać domenę produkcyjną — steruje adresem witryny
+w Caddy, adresem auth, `sitemap.xml`, `robots.txt` i metadanymi.
 
 Wartość `DATABASE_URL` w `.env` dotyczy tylko lokalnego developmentu —
 w compose aplikacja i migracje dostają własny adres z hostem `db`.
@@ -82,3 +86,24 @@ docker compose up -d --build
 > Uwaga: `BASE_URL` jest wypalany w statyczne trasy (`sitemap.xml`, `robots.txt`,
 > metadane) podczas budowania obrazu — zmiana domeny wymaga przebudowania
 > (`docker compose up -d --build`).
+
+## Google Search Console (po wdrożeniu cwicz-excel.pl)
+
+Ręczna checklista jednorazowa:
+
+1. **Rekord DNS**: `cwicz-excel.pl` (A) → IP VPS; sprawdź `dig cwicz-excel.pl`.
+2. **Deploy**: `.env` na VPS z `BASE_URL=https://cwicz-excel.pl`,
+   potem `docker compose up -d --build` (pełny rebuild — `BASE_URL` wypalany).
+3. **Smoke po deployu**:
+   - `https://cwicz-excel.pl/lekcje/logika-jezeli` → 200, HTML zawiera
+     `application/ld+json`, `seoDescription`, `<h1>`;
+   - `https://cwicz-excel.pl/robots.txt` → brak `Disallow: /lekcje`;
+   - `https://cwicz-excel.pl/sitemap.xml` → ~33 URL-e z `cwicz-excel.pl`;
+   - `https://cwicz-excel.pl/opengraph-image` → zwraca PNG.
+4. **GSC**: dodaj property typu *Domain* (`cwicz-excel.pl`), potwierdź
+   rekordem TXT w DNS u rejestratora.
+5. **Sitemapa**: w GSC wyślij `https://cwicz-excel.pl/sitemap.xml`.
+6. **Indeksowanie**: dla kilku lekcji (np. `logika-jezeli`,
+   `wyszukaj-pionowo`, `adresowanie-wzgledne-bezwzgledne`) użyj
+   *URL Inspection* → *Request indexing*.
+7. Po ~tygodniu sprawdź raport *Pages* i frachy w *Performance*.
