@@ -3,7 +3,7 @@ import { AuthShell } from "@/features/auth/AuthShell";
 import { RegisterForm } from "@/features/auth/RegisterForm";
 
 export const metadata: Metadata = {
-  title: "Załóż konto — Excel Trainer",
+  title: "Załóż konto",
 };
 
 export default function RegisterPage() {

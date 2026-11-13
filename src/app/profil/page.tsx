@@ -8,7 +8,7 @@ import { getLessonProgress } from "@/features/progress/queries";
 import { getCurrentUser } from "@/lib/session";
 
 export const metadata: Metadata = {
-  title: "Mój profil — Excel Trainer",
+  title: "Mój profil",
 };
 
 export default function ProfilePage() {

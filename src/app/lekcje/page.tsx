@@ -8,7 +8,10 @@ import { plPlural } from "@/lib/plural";
 import { getSessionUser } from "@/lib/session";
 
 export const metadata: Metadata = {
-  title: "Lekcje — Excel Trainer",
+  title: "Lekcje",
+  description:
+    "Katalog lekcji Excela: od podstaw wpisywania danych po funkcje JEŻELI, WYSZUKAJ.PIONOWO i tablicowe. Trenuj w arkuszu w przeglądarce.",
+  alternates: { canonical: "/lekcje" },
 };
 
 export default function LessonsPage() {

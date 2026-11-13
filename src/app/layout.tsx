@@ -12,7 +12,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin", "latin-ext"],
 });
 
-const title = "Excel Trainer — nauka Excela przez zadania";
+const siteName = "Ćwicz Excel";
+const title = `${siteName} — nauka Excela przez zadania`;
 const description =
   "Trenuj Excela na praktycznych zadaniach w arkuszu, który wygląda i działa jak prawdziwy. Śledź postęp, wybieraj tematy.";
 
@@ -20,14 +21,14 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.BASE_URL ?? "http://localhost:3000"),
   title: {
     default: title,
-    template: "%s",
+    template: `%s — ${siteName}`,
   },
   description,
   openGraph: {
     type: "website",
     locale: "pl_PL",
     url: "/",
-    siteName: "Excel Trainer",
+    siteName,
     title,
     description,
   },

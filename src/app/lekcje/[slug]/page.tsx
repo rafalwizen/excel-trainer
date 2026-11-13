@@ -1,6 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { difficultyLabel } from "@/content/difficulty";
 import { allLessons, getLesson } from "@/content/registry";
 import { LessonRunner } from "@/features/lessons/LessonRunner";
 import { LessonSeoSection } from "@/features/lessons/LessonSeoSection";
@@ -18,12 +19,21 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const lesson = getLesson(slug);
-  if (!lesson) return { title: "Lekcja — Excel Trainer" };
+  if (!lesson) return { title: "Lekcja" };
+  const description =
+    lesson.seoDescription ??
+    `${lesson.shortDescription} Nauczysz się: ${lesson.learningGoals.slice(0, 3).join("; ")}.`;
   return {
-    title: `${lesson.title} — Excel Trainer`,
-    description:
-      lesson.seoDescription ??
-      `${lesson.shortDescription} Nauczysz się: ${lesson.learningGoals.slice(0, 3).join("; ")}.`,
+    title: lesson.title,
+    description,
+    alternates: { canonical: `/lekcje/${slug}` },
+    keywords: [lesson.category, ...lesson.learningGoals.slice(0, 3)],
+    openGraph: {
+      type: "article",
+      url: `/lekcje/${slug}`,
+      title: lesson.title,
+      description,
+    },
   };
 }
 
@@ -67,8 +77,46 @@ async function LessonContent({
     title: getLesson(prereqSlug)?.title ?? prereqSlug,
   }));
 
+  const base = process.env.BASE_URL ?? "http://localhost:3000";
+  const courseJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    name: lesson.title,
+    description: lesson.seoDescription ?? lesson.shortDescription,
+    url: `${base}/lekcje/${slug}`,
+    inLanguage: "pl",
+    educationalLevel: difficultyLabel(lesson.difficulty),
+    provider: {
+      "@type": "Organization",
+      name: "Ćwicz Excel",
+      url: base,
+    },
+  };
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Strona główna", item: base },
+      { "@type": "ListItem", position: 2, name: "Lekcje", item: `${base}/lekcje` },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: lesson.title,
+        item: `${base}/lekcje/${slug}`,
+      },
+    ],
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(courseJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <LessonRunner
         lesson={lesson}
         prerequisites={prerequisites}

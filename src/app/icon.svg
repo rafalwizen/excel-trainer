@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+  <!-- Favicon: mini sheet grid with one green selected cell. -->
+  <rect width="20" height="20" rx="4" fill="#14532d"/>
+  <rect x="4" y="4" width="3.5" height="3.5" rx="0.8" fill="#d4d4d4"/>
+  <rect x="8.25" y="4" width="3.5" height="3.5" rx="0.8" fill="#d4d4d4"/>
+  <rect x="12.5" y="4" width="3.5" height="3.5" rx="0.8" fill="#d4d4d4"/>
+  <rect x="4" y="8.25" width="3.5" height="3.5" rx="0.8" fill="#d4d4d4"/>
+  <rect x="8.25" y="8.25" width="3.5" height="3.5" rx="0.8" fill="#4ade80"/>
+  <rect x="12.5" y="8.25" width="3.5" height="3.5" rx="0.8" fill="#d4d4d4"/>
+  <rect x="4" y="12.5" width="3.5" height="3.5" rx="0.8" fill="#d4d4d4"/>
+  <rect x="8.25" y="12.5" width="3.5" height="3.5" rx="0.8" fill="#d4d4d4"/>
+  <rect x="12.5" y="12.5" width="3.5" height="3.5" rx="0.8" fill="#d4d4d4"/>
+</svg>

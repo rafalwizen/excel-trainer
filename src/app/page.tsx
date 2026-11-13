@@ -19,8 +19,20 @@ const secondaryAction =
   "rounded-lg border border-neutral-300 px-6 py-3 text-sm font-semibold text-neutral-700 transition hover:border-neutral-400 hover:bg-neutral-50";
 
 export default function Home() {
+  // Structured data for the site entity (search engines).
+  const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Ćwicz Excel",
+    url: process.env.BASE_URL ?? "http://localhost:3000",
+    inLanguage: "pl",
+  };
   return (
     <div className="flex min-h-screen flex-col bg-white font-sans text-neutral-900">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+      />
       <SiteHeader />
       <main className="flex-1">
         <Hero />
@@ -70,7 +82,7 @@ function SiteHeader() {
           className="flex items-center gap-2.5 font-semibold tracking-tight text-neutral-900"
         >
           <GridMark />
-          Excel Trainer
+          Ćwicz Excel
         </Link>
         <nav className="ml-auto flex items-center gap-1 sm:gap-2">
           <Link
@@ -368,7 +380,7 @@ function SiteFooter() {
   return (
     <footer className="border-t border-neutral-200 bg-white">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-1 px-4 py-8 text-sm text-neutral-500 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-        <p>Excel Trainer — nauka Excela przez zadania</p>
+        <p>Ćwicz Excel — nauka Excela przez zadania</p>
         <p>© 2026</p>
       </div>
     </footer>
