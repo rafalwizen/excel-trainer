@@ -56,8 +56,11 @@ services:
       retries: 5
       start_period: 15s
 
+  # Edge variant A: direct HTTPS via Let's Encrypt. Requires open ports 80/443.
+  # Start with: docker compose --profile caddy up -d
   caddy:
     image: caddy:2-alpine
+    profiles: ["caddy"]
     restart: unless-stopped
     ports:
       - "80:80"
@@ -68,6 +71,19 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
       - caddy_config:/config
+    depends_on:
+      app:
+        condition: service_healthy
+
+  # Edge variant B: Cloudflare Tunnel (no open ports; for NAT'd VPS like mikr.us).
+  # Start with: docker compose --profile tunnel up -d and TUNNEL_TOKEN in .env.
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN:-}
+    profiles: ["tunnel"]
     depends_on:
       app:
         condition: service_healthy
