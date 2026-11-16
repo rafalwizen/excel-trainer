@@ -2,6 +2,12 @@ services:
   db:
     image: postgres:18-alpine
     restart: unless-stopped
+    # Bounded logs (RODO storage limitation) — applies on container recreate.
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     environment:
       POSTGRES_USER: excel_trainer
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
@@ -22,6 +28,11 @@ services:
       context: .
       target: migrate
     restart: "no"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     environment:
       DATABASE_URL: postgres://excel_trainer:${POSTGRES_PASSWORD}@db:5432/excel_trainer
     depends_on:
@@ -35,6 +46,11 @@ services:
       args:
         BASE_URL: ${BASE_URL:-http://localhost:3000}
     restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     env_file: .env
     environment:
       NODE_ENV: production
@@ -62,6 +78,11 @@ services:
     image: caddy:2-alpine
     profiles: ["caddy"]
     restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     ports:
       - "80:80"
       - "443:443"
@@ -80,6 +101,11 @@ services:
   cloudflared:
     image: cloudflare/cloudflared:latest
     restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     command: tunnel --no-autoupdate run
     environment:
       TUNNEL_TOKEN: ${TUNNEL_TOKEN:-}
