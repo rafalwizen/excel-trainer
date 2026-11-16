@@ -12,7 +12,7 @@ export const politykaPrywatnosci: LegalDoc = {
       id: "administrator",
       heading: "Administrator danych",
       paragraphs: [
-        "Administratorem Twoich danych osobowych w serwisie Ćwicz Excel (cwicz-excel.pl, dalej: Serwis) jest Rafał Wizen (dalej: Administrator).",
+        "Administratorem Twoich danych osobowych w serwisie Ćwicz Excel (cwicz-excel.pl, dalej: Serwis) jest Rafał Wiżeń (dalej: Administrator).",
         "Kontakt w sprawach ochrony danych osobowych: kontakt@cwicz-excel.pl.",
       ],
     },

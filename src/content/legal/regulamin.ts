@@ -12,7 +12,7 @@ export const regulamin: LegalDoc = {
       heading: "§ 1. Postanowienia ogólne",
       paragraphs: [
         "Niniejszy regulamin (dalej: Regulamin) określa zasady korzystania z serwisu Ćwicz Excel dostępnego pod adresem cwicz-excel.pl (dalej: Serwis), prawa i obowiązki stron oraz warunki zawierania i rozwiązywania umów o świadczenie usług drogą elektroniczną.",
-        "Usługodawcą jest Rafał Wizen, prowadzący Serwis (dalej: Usługodawca). Kontakt z Usługodawcą: kontakt@cwicz-excel.pl.",
+        "Usługodawcą jest Rafał Wiżeń, prowadzący Serwis (dalej: Usługodawca). Kontakt z Usługodawcą: kontakt@cwicz-excel.pl.",
         "Ilekroć w Regulaminie mowa o: Usługowniku — rozumie się przez to osobę korzystającą z Serwisu; Koncie — rozumie się przez to unikalny zestaw danych identyfikujących Usługownika, umożliwiający korzystanie z dodatkowych funkcji Serwisu; uśude — rozumie się przez to ustawę z dnia 18 lipca 2002 r. o świadczeniu usług drogą elektroniczną.",
         "Korzystanie z Serwisu oznacza akceptację niniejszego Regulaminu.",
       ],
