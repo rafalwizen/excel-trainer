@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { ProgressBar } from "@/components/ProgressBar";
 import { allLessons } from "@/content/registry";
+import { DeleteAccountButton } from "@/features/auth/DeleteAccountButton";
 import { SignOutButton } from "@/features/auth/SignOutButton";
 import { getLessonProgress } from "@/features/progress/queries";
 import { getCurrentUser } from "@/lib/session";
@@ -135,6 +136,16 @@ async function Profile() {
               })}
             </ul>
           )}
+        </section>
+
+        <section className="rounded-xl border border-red-200 bg-white p-4">
+          <h2 className="text-xs font-semibold uppercase tracking-wide text-neutral-400">
+            Konto
+          </h2>
+          <p className="mt-2 text-sm text-neutral-600">
+            Usunięcie konta jest nieodwracalne i wymazuje cały postęp w nauce.
+          </p>
+          <DeleteAccountButton />
         </section>
       </main>
     </div>

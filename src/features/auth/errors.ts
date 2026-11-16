@@ -7,6 +7,8 @@ const MESSAGES: Record<string, string> = {
   WEAK_PASSWORD: "Hasło musi mieć co najmniej 8 znaków.",
   INVALID_EMAIL: "Podaj poprawny adres e-mail.",
   FAILED_TO_CREATE_USER: "Nie udało się utworzyć konta. Spróbuj ponownie.",
+  CREDENTIAL_ACCOUNT_NOT_FOUND: "Nieprawidłowy e-mail lub hasło.",
+  SESSION_EXPIRED: "Sesja wygasła. Zaloguj się ponownie.",
 };
 
 export function authErrorMessage(code: string | null | undefined): string {
