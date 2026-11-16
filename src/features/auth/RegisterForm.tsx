@@ -20,6 +20,12 @@ export function RegisterForm() {
     setError(null);
     setPending(true);
     const formData = new FormData(e.currentTarget);
+    // The form is noValidate, so native `required` on the consent checkbox
+    // never fires — the gate has to be explicit here.
+    if (formData.get("consent") !== "on") {
+      setError("Zaakceptuj Regulamin i Politykę prywatności, aby kontynuować.");
+      return;
+    }
     const { error } = await authClient.signUp.email({
       name: String(formData.get("name") ?? "").trim(),
       email: String(formData.get("email") ?? "").trim(),
@@ -79,6 +85,32 @@ export function RegisterForm() {
           placeholder="min. 8 znaków"
         />
       </div>
+      <label className="flex items-start gap-2 text-sm text-neutral-600">
+        <input
+          type="checkbox"
+          name="consent"
+          className="mt-0.5 size-4 accent-green-700"
+        />
+        <span>
+          Akceptuję{" "}
+          <Link
+            href="/regulamin"
+            target="_blank"
+            className="font-medium text-green-700 hover:underline"
+          >
+            Regulamin
+          </Link>{" "}
+          i{" "}
+          <Link
+            href="/polityka-prywatnosci"
+            target="_blank"
+            className="font-medium text-green-700 hover:underline"
+          >
+            Politykę prywatności
+          </Link>
+          .
+        </span>
+      </label>
       {error ? (
         <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
           {error}

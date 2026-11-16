@@ -379,9 +379,23 @@ function CtaBand() {
 function SiteFooter() {
   return (
     <footer className="border-t border-neutral-200 bg-white">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-1 px-4 py-8 text-sm text-neutral-500 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-4 py-8 text-sm text-neutral-500 sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <p>Ćwicz Excel — nauka Excela przez zadania</p>
-        <p>© 2026</p>
+        <nav aria-label="Stopka" className="flex items-center gap-4">
+          <Link
+            href="/regulamin"
+            className="transition hover:text-neutral-800"
+          >
+            Regulamin
+          </Link>
+          <Link
+            href="/polityka-prywatnosci"
+            className="transition hover:text-neutral-800"
+          >
+            Polityka prywatności
+          </Link>
+          <span>© 2026</span>
+        </nav>
       </div>
     </footer>
   );
